@@ -14,46 +14,59 @@ public class BlockMove : MonoBehaviour
 
     private Rigidbody rigid;
 
-    public bool isStop = false;
+    public bool isStop;
+
+    private float stayTime;
     // Start is called before the first frame update
     void Start()
     {
+        isStop = true;
+
         anyTouch = false;
         rigid = GetComponent<Rigidbody>();
         rigid.isKinematic = false;
+
+        stayTime = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(isStop)
-        {
-            return;
-        }
+        stayTime++;
 
         Move();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision col)
     {
+        if(stayTime < 0.1f)
+        {
+            return;
+        }
+
+        //if (col.gameObject.tag == "Wall")
+        //{
+        //    isStop = true;      
+        //}
 
         if (anyTouch) return;
         rigid.isKinematic = true;
         anyTouch = true;
-
     }
 
     //移動
     void Move()
     {
-        if(!anyTouch)
+        if (isStop)
+        {
+            return;
+        }
+
+        if (!anyTouch)
         {
             //下に移動し続ける
             transform.position += new Vector3(0, downSpeed, 0)* Time.deltaTime;
         }
-
-
-
         
     }
 

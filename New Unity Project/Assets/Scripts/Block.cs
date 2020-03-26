@@ -15,7 +15,7 @@ public class Block : MonoBehaviour
         Z_BLOCK = 4    };
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         childrenMove = transform.GetComponentsInChildren<BlockMove>();
         //children = 
