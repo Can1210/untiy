@@ -10,8 +10,9 @@ public class BlockMove : MonoBehaviour
     [SerializeField]
     private float downSpeed;  //落ちるスピード
 
-
     private Rigidbody rigid;
+
+    public bool isStop = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +24,11 @@ public class BlockMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isStop)
+        {
+            return;
+        }
+
         Move();
     }
 
