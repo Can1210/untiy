@@ -9,6 +9,8 @@ public class BlockMove : MonoBehaviour
 
     [SerializeField]
     private float downSpeed;  //落ちるスピード
+    [SerializeField]
+    private float upSpeed;    //上昇スピード
 
     private Rigidbody rigid;
 
@@ -49,6 +51,9 @@ public class BlockMove : MonoBehaviour
             //下に移動し続ける
             transform.position += new Vector3(0, downSpeed, 0)* Time.deltaTime;
         }
+
+
+
         
     }
 
