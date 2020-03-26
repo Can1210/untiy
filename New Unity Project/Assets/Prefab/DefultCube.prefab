@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9197069551167667768}
   - component: {fileID: 3623183508859195280}
   - component: {fileID: 7822427168944226537}
+  - component: {fileID: 3239339309133367568}
   m_Layer: 0
   m_Name: DefultCube
   m_TagString: Untagged
@@ -106,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downSpeed: -5
+  isStop: 0
 --- !u!54 &7822427168944226537
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -122,3 +124,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3239339309133367568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3445228602655649065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba65e10168b08ef4387aff3a9b708527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243, type: 3}
+  canvas: {fileID: 7317320813141073261, guid: 14243a635024e24428dfd91829e64801, type: 3}
+  testNum: 3
