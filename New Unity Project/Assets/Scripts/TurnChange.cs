@@ -11,19 +11,22 @@ public enum Turn
 
 
 
-//ターンを制御するクラス
+//ターン切り替えクラス
 public class TurnChange : MonoBehaviour
 {
-
     //現在のターン
     static bool s_turnChange;        //外部から帰らる
     private Turn nowTurn;            //現在のターン
+
+    private bool roundEnd;           //ターンの終了
+
 
     // Start is called before the first frame update
     void Start()
     {
         nowTurn = Turn.Thinking;    //最初は考えるターン
         s_turnChange = false;
+        roundEnd = false;
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class TurnChange : MonoBehaviour
         switch (nowTurn)
         {
             case Turn.Thinking:
+                roundEnd = false;
                 CheckBool(Turn.PutIn);
                 break;
             case Turn.PutIn:
@@ -45,6 +49,7 @@ public class TurnChange : MonoBehaviour
                 break;
             case Turn.Results:
                 CheckBool(Turn.Thinking);
+                roundEnd = true;
                 break;
             default:
                 break;
@@ -68,4 +73,9 @@ public class TurnChange : MonoBehaviour
     {
         return nowTurn;
     }
+    public bool GetRoundEnd()
+    {
+        return roundEnd;
+    }
+
 }
