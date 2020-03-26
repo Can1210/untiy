@@ -22,8 +22,8 @@ public class Spawn : MonoBehaviour
     private int objIndex = 0;
 
     // Start is called before the first frame update
-    void Awake()//スポーンだから早めに
-    {
+    void Start()
+    { 
         InstansObject = new List<GameObject>();
 
         for (int i = 0;i < objects.Length; i++)
@@ -37,7 +37,7 @@ public class Spawn : MonoBehaviour
 
             GameObject g = Instantiate(randObjects[i], v, Quaternion.identity);
             InstansObject.Add(g);
-            InstansObject[i].GetComponent<BlockMove>().isStop = true;
+            InstansObject[i].GetComponent<Block>().ChildrenStop();
 
             objIndex += 1;//何個オブジェクトを使えるか
         }
@@ -68,7 +68,7 @@ public class Spawn : MonoBehaviour
             //  ここから下はべつのところでやったほうがいい気がする
 
             InstansObject[index].transform.position = transform.position;
-            InstansObject[index].GetComponent<BlockMove>().isStop = false; //動くようにする
+            InstansObject[index].GetComponent<Block>().ChildrenMove(); //動くようにする
 
             InstansObject.Remove(InstansObject[index]);
 

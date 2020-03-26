@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    private GameObject[] children;
-
+    private BlockMove[] childrenMove;
     //なんのBLOCKか
     public enum BlockType {
         O_BLOCK = 4,//Cubeの数が4
@@ -16,14 +15,31 @@ public class Block : MonoBehaviour
         Z_BLOCK = 4    };
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        childrenMove = transform.GetComponentsInChildren<BlockMove>();
         //children = 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void ChildrenStop()
+    {
+        for (int i = 0; i < childrenMove.Length; i++)
+        {
+            childrenMove[i].isStop = true;
+        }
+    }
+
+    public void ChildrenMove()
+    {
+        for (int i = 0; i < childrenMove.Length; i++)
+        {
+            childrenMove[i].isStop = false;
+        }
     }
 }
