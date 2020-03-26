@@ -8,10 +8,9 @@ public class Spawn : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] objects;    //登録するオブジェクト
-    [SerializeField]
-    private Vector3 spwanPos;        //生成位置
 
-    
+    private Rigidbody rigidbody;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,7 +32,7 @@ public class Spawn : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.A))
         {
             //何を出すかランダムにする
-            int a = Random.Range(0, objects.Length-1);
+            int a = Random.Range(0, objects.Length);
             //オブジェクトの生成
             Instantiate(objects[a], transform.position, Quaternion.identity);
         }
