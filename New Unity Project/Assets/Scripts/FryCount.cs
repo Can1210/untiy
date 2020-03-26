@@ -10,28 +10,30 @@ public class FryCount : MonoBehaviour
     private Text childObject;
 
     [SerializeField]
-    private int testNum;    //テスト用
+    private int fryNum;    //テスト用
 
     // Start is called before the first frame update
     void Start()
     {
         Vector3 a = gameObject.transform.position;
         childObject = Instantiate(text, RectTransformUtility.WorldToScreenPoint(Camera.main, new Vector3(a.x, a.y, 0)), Quaternion.identity);
-
-
+        
         GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
         childObject.transform.parent = canvas.transform;
-        
-        
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        childObject.text = testNum.ToString();
+
+        if (fryNum <= 0) fryNum = 0;  //0以下にはならない
+        childObject.text = fryNum.ToString();
         Vector3 a = gameObject.transform.position;
 
         childObject.transform.position = RectTransformUtility.WorldToScreenPoint(Camera.main, new Vector3(a.x, a.y, 0));
+    }
+    public int GetFryCount()
+    {
+        return fryNum;
     }
 }
