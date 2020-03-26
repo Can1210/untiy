@@ -22,7 +22,7 @@ public class Spawn : MonoBehaviour
     private int objIndex = 0;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     { 
         InstansObject = new List<GameObject>();
 
@@ -37,7 +37,7 @@ public class Spawn : MonoBehaviour
 
             GameObject g = Instantiate(randObjects[i], v, Quaternion.identity);
             InstansObject.Add(g);
-            InstansObject[i].GetComponent<Block>().ChildrenStop();
+            //InstansObject[i].GetComponent<Block>().ChildrenStop();
 
             objIndex += 1;//何個オブジェクトを使えるか
         }
