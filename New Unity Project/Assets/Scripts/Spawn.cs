@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Linq;
+
 
 //指定されたものを落とすスポーンクラス
 public class Spawn : MonoBehaviour
@@ -9,31 +11,35 @@ public class Spawn : MonoBehaviour
     [SerializeField]
     private GameObject[] objects;    //登録するオブジェクト
 
-    private GameObject[] randObjects = new GameObject[6]; //とりあえず6種類の中から使えるオブジェクトを選ぶランダムで6個
+    //他から干渉できるようにpublic
+    public List<GameObject> InstansObject;
+
+    //とりあえず6種類の中から使えるオブジェクトを選ぶランダムで6個
+    private List<GameObject> randObjects = new List<GameObject>(); 
 
     private Rigidbody rigidbody;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    private int objIndex = 0;
 
-        for(int i = 0;i < objects.Length; i++)
+    // Start is called before the first frame update
+    void Awake()//スポーンだから早めに
+    {
+        InstansObject = new List<GameObject>();
+
+        for (int i = 0;i < objects.Length; i++)
         {
             int rnd = Random.Range(0, objects.Length);
 
-            randObjects[i] = objects[rnd];
+            randObjects.Add(objects[rnd]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
 
             //横に生成
             Vector3 v = new Vector3(10, 3 + (3 * i), 0);
 
-            GameObject g = Instantiate(randObjects[i], v , Quaternion.identity);
-            g.GetComponent<BlockMove>().isStop = true;
-        }
+            GameObject g = Instantiate(randObjects[i], v, Quaternion.identity);
+            InstansObject.Add(g);
+            InstansObject[i].GetComponent<BlockMove>().isStop = true;
 
-        foreach(var i in randObjects)
-        {
-            //確認なにが出てくるか
-            Debug.Log(i);
+            objIndex += 1;//何個オブジェクトを使えるか
         }
     }
 
@@ -41,24 +47,32 @@ public class Spawn : MonoBehaviour
     void Update()
     {
         SpawnBlock();
-    }
-    
-
+    }   
 
     //ブロックの生成
     void SpawnBlock()
     {
+        if(objIndex <= 0)
+        {
+            //もう使えるオブジェクトがなければreturn
+            //Debug.Log("使えるオブジェクトがない");
+            return;
+        }
 
-
-        //Aボタンを押されてたら生成
+        //Aボタンを押されてたらpositionを変更
         if(Input.GetKeyDown(KeyCode.A))
         {
             //何を出すかランダムにする
-            int a = Random.Range(0, objects.Length);
+            int index = Random.Range(0, InstansObject.Count);
 
+            //  ここから下はべつのところでやったほうがいい気がする
 
-            //オブジェクトの生成
-            Instantiate(objects[a], transform.position, Quaternion.identity);
+            InstansObject[index].transform.position = transform.position;
+            InstansObject[index].GetComponent<BlockMove>().isStop = false; //動くようにする
+
+            InstansObject.Remove(InstansObject[index]);
+
+            objIndex--;
         }
     }
 }
