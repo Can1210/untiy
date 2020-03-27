@@ -33,7 +33,7 @@ public class Spawn : MonoBehaviour
             randObjects.Add(objects[rnd]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
 
             //横に生成
-            Vector3 v = new Vector3(10, 3 + (3 * i), 0);
+            Vector3 v = new Vector3(15, 3 + (3 * i), 0);
 
             GameObject g = Instantiate(randObjects[i], v, Quaternion.identity);
             InstansObject.Add(g);
@@ -67,8 +67,11 @@ public class Spawn : MonoBehaviour
 
             //  ここから下はべつのところでやったほうがいい気がする
 
+            //InstansObject[index].transform.position = transform.position;
+            //InstansObject[index].GetComponent<Block>().ChildrenMove(); //動くようにする
+
             InstansObject[index].transform.position = transform.position;
-            InstansObject[index].GetComponent<Block>().ChildrenMove(); //動くようにする
+            InstansObject[index].GetComponent<Block_test>().ChildrenMove(); //動くようにする
 
             InstansObject.Remove(InstansObject[index]);
 

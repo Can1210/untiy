@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockManeger : MonoBehaviour
+public class BlockManager : MonoBehaviour
 {
     //public int turn;
 
