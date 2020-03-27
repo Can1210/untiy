@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockMove : MonoBehaviour
+public class BlockMove_test : MonoBehaviour
 {
 
     private bool anyTouch;
 
     [SerializeField]
-    private float downSpeed;  //落ちるスピード
+    private int downSpeed = -1;  //落ちるスピード
     [SerializeField]
-    private float upSpeed;    //上昇スピード
+    private int upSpeed;    //上昇スピード
 
     private Rigidbody rigid;
 
@@ -26,10 +26,6 @@ public class BlockMove : MonoBehaviour
 
         isStop = true;
 
-        anyTouch = false;
-        rigid = GetComponent<Rigidbody>();
-        rigid.isKinematic = false;
-
         stayTime = 0;
     }
 
@@ -41,23 +37,6 @@ public class BlockMove : MonoBehaviour
         Move();
     }
 
-    private void OnCollisionEnter(Collision col)
-    {
-        if(stayTime < 0.1f)
-        {
-            return;
-        }
-
-        //if (col.gameObject.tag == "Wall")
-        //{
-        //    isStop = true;      
-        //}
-
-        if (anyTouch) return;
-        rigid.isKinematic = true;
-        anyTouch = true;
-    }
-
     //移動
     void Move()
     {
@@ -65,13 +44,13 @@ public class BlockMove : MonoBehaviour
         {
             return;
         }
-
-        if (!anyTouch)
-        {
             //下に移動し続ける
-            transform.position += new Vector3(0, downSpeed, 0)* Time.deltaTime;
-        }
-        
-    }
+        transform.position += new Vector3(0, downSpeed, 0) * Time.deltaTime;
+        Debug.Log(transform.position);
 
+        if(gameManager.UnderMap(transform.position))
+        {
+            isStop = true;
+        }
+    }
 }
