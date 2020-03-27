@@ -22,6 +22,10 @@ public class BlockMove_test : MonoBehaviour
     private int currenTime;
 
     private bool moveOk;
+
+    private int xPos = 0;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,5 +73,18 @@ public class BlockMove_test : MonoBehaviour
         {
             isStop = true;
         }
+
+        //横移動
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            xPos--;
+            transform.position += new Vector3(xPos, 0, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            xPos++;
+            transform.position += new Vector3(xPos, 0, 0);
+        }
+
     }
 }
