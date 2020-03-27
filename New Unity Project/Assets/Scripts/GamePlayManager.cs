@@ -11,6 +11,11 @@ public class GamePlayManager : MonoBehaviour
 
     public Vector3[,] worldPos = new Vector3[width,height];
 
+    public enum BlockState
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Awake()
     {

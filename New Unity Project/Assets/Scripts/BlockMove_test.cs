@@ -18,21 +18,32 @@ public class BlockMove_test : MonoBehaviour
 
     GamePlayManager gameManager;
 
-    private float stayTime;
+    private float time;
+    private int currenTime;
+
+    private bool moveOk;
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
 
         isStop = true;
+        moveOk = false;
 
-        stayTime = 0;
+        time = 0;
+        currenTime = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        stayTime++;
+        time += Time.deltaTime;
+        if (time % 60 >= 1)
+        {
+            currenTime += (int)time;
+            time = 0;
+            moveOk = true;
+        }
 
         Move();
     }
@@ -40,13 +51,19 @@ public class BlockMove_test : MonoBehaviour
     //移動
     void Move()
     {
+
+
         if (isStop)
         {
             return;
-        }
+        } 
+
+        if(moveOk)
+        {
             //下に移動し続ける
-        transform.position += new Vector3(0, downSpeed, 0) * Time.deltaTime;
-        Debug.Log(transform.position);
+            transform.position += new Vector3(0, downSpeed, 0);
+            moveOk = false;
+        }     
 
         if(gameManager.UnderMap(transform.position))
         {
