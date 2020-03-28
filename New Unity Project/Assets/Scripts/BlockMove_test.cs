@@ -22,6 +22,10 @@ public class BlockMove_test : MonoBehaviour
     private int currenTime;
 
     private bool moveOk;
+    public bool nowMove{
+        set { this.moveOk = value; }
+        get { return this.moveOk; }
+        }
 
     private int xPos = 0;
     
@@ -41,8 +45,9 @@ public class BlockMove_test : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        if (time % 60 >= 1)
+                               //↓落ちるスピード
+        time += Time.deltaTime * 2.5f;
+        if (time >= 1)
         {
             currenTime += (int)time;
             time = 0;

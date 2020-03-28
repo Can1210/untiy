@@ -1,22 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance = null;
 
-    const int width = 10;
-    const int height = 20;
+    const int width = 12;
+    const int height = 22;
 
     public Vector3[,] worldPos = new Vector3[width,height];
 
+    public float time;
+    private int currenTime;//時間
+
     string s = "";//デバッグ用
+    public Text debugText;
 
     public enum InArray
     {
         Space,
         Cube,
+        Wall,
+
+        None,
     }
 
     private InArray[,] inArrays = new InArray[width, height];
@@ -43,12 +51,30 @@ public class GamePlayManager : MonoBehaviour
         }
 
         inSpaceArray();
+        WallArray();
+
+        time = 0;
+        currenTime = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        NowTime();//    ほぼデバッグ用
+
         arrayDebug();
+    }
+
+     private void NowTime()
+    {                            //↓Blockmove_testとスピードを合わせれば常にわかる
+        time += Time.deltaTime;//  *  0.5f;
+        if (time % 60 >= 1)
+        {
+            currenTime += (int)time;
+            time = 0;
+
+            //arrayDebug();//ほぼデバッグ用
+        }
     }
 
     public void CurrentArray()
@@ -72,11 +98,11 @@ public class GamePlayManager : MonoBehaviour
         return p;
     }
 
-    public bool UnderMap(Vector3 p)//下にいるとき
+    public bool UnderMap(Vector3 p)//下にいるときブロックが留まる
     {
         for (int x = 0; x < width; x++)
         {
-            if (p.y <= worldPos[x, 0].y)
+            if (p.y <= worldPos[x, 1].y)
             {
                 return true;
             }
@@ -111,7 +137,7 @@ public class GamePlayManager : MonoBehaviour
         return p;
     }
 
-    public void inSpaceArray()
+    public void inSpaceArray()//とりあえずすべてをspaceの情報にした。
     {
         for (int x = 0; x < width; ++x)
         {
@@ -122,10 +148,28 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
-    public void arrayDebug()
+    public void WallArray()//壁の情報を付ける
     {
 
-        s = "\n";
+        for (int x = 0; x < width ; ++x)
+        {
+            inArrays[x, 0] = InArray.Wall;//一番下
+
+            inArrays[x, height - 1] = InArray.Wall;//一番上
+        }
+
+        for (int y = 0; y < height; ++y)
+        {
+            inArrays[0, y] = InArray.Wall;//一番左
+
+            inArrays[width - 1, y] = InArray.Wall;//一番右
+        }
+    }
+
+    public void arrayDebug()
+    {
+        //s = "\n";//最初改行
+        s = "";
 
         for (int y = height -1 ;0 <= y && y < height; y--)
         {
@@ -134,16 +178,26 @@ public class GamePlayManager : MonoBehaviour
                 switch (inArrays[x, y])
                 {
                     case InArray.Space:
-                        s += "#";
+                        s += "  ";
                         break;
                     case InArray.Cube:
                         s += "O";
+                        break;
+
+                    case InArray.Wall:
+                        s += "a";
+                        break;
+
+                    default:
+                        s += "G";
                         break;
                 }
             }
             s = s + "\n";
         }
 
-        Debug.Log(s);
+        debugText.text = s;
+
+        //Debug.Log(s);
     }
 }
