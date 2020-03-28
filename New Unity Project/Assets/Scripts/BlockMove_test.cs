@@ -56,7 +56,7 @@ public class BlockMove_test : MonoBehaviour
     void Move()
     {
 
-
+        xPos = 0;
         if (isStop)
         {
             return;
@@ -77,12 +77,12 @@ public class BlockMove_test : MonoBehaviour
         //横移動
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            xPos--;
+            xPos = -1;
             transform.position += new Vector3(xPos, 0, 0);
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            xPos++;
+            xPos =1;
             transform.position += new Vector3(xPos, 0, 0);
         }
 
