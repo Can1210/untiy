@@ -15,7 +15,7 @@ public class Cube : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        previous = Vector3.zero;
+        previous = new Vector3(1,1,0);
     }
 
     // Update is called once per frame
@@ -23,6 +23,6 @@ public class Cube : MonoBehaviour
     {
         gameManager.inCubeArray(transform.position,previous);
 
-        previous = transform.position;
+        previous = transform.position;//前のポジション
     }
 }
