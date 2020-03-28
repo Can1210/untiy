@@ -28,7 +28,7 @@ public class BlockMove_test : MonoBehaviour
         }
 
     private int xPos = 0;
-    
+    private Vector3 dic;
 
     // Start is called before the first frame update
     void Start()
@@ -60,8 +60,9 @@ public class BlockMove_test : MonoBehaviour
     //移動
     void Move()
     {
-
+        dic = transform.position;
         xPos = 0;
+
         if (isStop)
         {
             return;
@@ -70,11 +71,17 @@ public class BlockMove_test : MonoBehaviour
         if(moveOk)
         {
             //下に移動し続ける
-            transform.position += new Vector3(0, downSpeed, 0);
+            dic += new Vector3(0, downSpeed, 0);
             moveOk = false;
-        }     
+        }
 
-        if(gameManager.UnderMap(transform.position))
+        //一番下だったら止める  worldPos[x,1]←y座標の1は0にwallが入っているから
+        if (gameManager.UnderMap(transform.position))
+        {
+            isStop = true;
+        }
+
+        if(gameManager.OnMoveOk(dic))
         {
             isStop = true;
         }
@@ -83,13 +90,14 @@ public class BlockMove_test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             xPos = -1;
-            transform.position += new Vector3(xPos, 0, 0);
+            dic += new Vector3(xPos, 0, 0);
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             xPos =1;
-            transform.position += new Vector3(xPos, 0, 0);
+            dic += new Vector3(xPos, 0, 0);
         }
 
+        transform.position = dic;
     }
 }

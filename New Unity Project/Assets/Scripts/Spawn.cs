@@ -17,8 +17,6 @@ public class Spawn : MonoBehaviour
     //とりあえず6種類の中から使えるオブジェクトを選ぶランダムで6個
     private List<GameObject> randObjects = new List<GameObject>(); 
 
-    private Rigidbody rigidbody;
-
     private int objIndex = 0;
 
     // Start is called before the first frame update
@@ -66,9 +64,6 @@ public class Spawn : MonoBehaviour
             int index = Random.Range(0, InstansObject.Count);
 
             //  ここから下はべつのところでやったほうがいい気がする
-
-            //InstansObject[index].transform.position = transform.position;
-            //InstansObject[index].GetComponent<Block>().ChildrenMove(); //動くようにする
 
             InstansObject[index].transform.position = transform.position;
             InstansObject[index].GetComponent<Block_test>().ChildrenMove(); //動くようにする

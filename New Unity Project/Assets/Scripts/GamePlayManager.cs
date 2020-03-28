@@ -102,13 +102,44 @@ public class GamePlayManager : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            if (p.y <= worldPos[x, 1].y)
+            for (int y = 0; y < height; y++)
             {
-                return true;
+                if (p == worldPos[x, y])
+                {
+                    return true;
+                }
             }
+        }
+        return false;
+    }
+
+
+    //自分の座標にCubeがあった場合trueを返す  正直いらん
+    public bool OnCubeCheck(Vector3 p)
+    {
+        if(inArrays[(int)p.x,(int)p.y] == InArray.Cube)
+        {
+            return true;
         }
 
         return false;
+    }
+
+    //入れた座標のさきが動ける(space)ならGo
+    public bool OnMoveOk(Vector3 p)
+    {
+        if(worldPos[(int)p.x,(int)p.y] == null)
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    //その場所に何の情報があるか調べる
+    public InArray OnAllCheck(Vector3 p)
+    {
+        return inArrays[(int)p.x, (int)p.y];
     }
 
     public Vector3 ZeroPosition(Vector3 p)
@@ -116,6 +147,7 @@ public class GamePlayManager : MonoBehaviour
         return worldPos[0,0];
     }
 
+    //入れ替えcube  space
     public Vector3 inCubeArray(Vector3 p, Vector3 Previous)
     {
         for (int x = 0; x < width; ++x)
@@ -181,7 +213,7 @@ public class GamePlayManager : MonoBehaviour
                         s += "  ";
                         break;
                     case InArray.Cube:
-                        s += "O";
+                        s += "o";
                         break;
 
                     case InArray.Wall:
