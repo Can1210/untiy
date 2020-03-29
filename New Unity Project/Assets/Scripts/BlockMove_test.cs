@@ -81,10 +81,10 @@ public class BlockMove_test : MonoBehaviour
             isStop = true;
         }
 
-        if(gameManager.OnMoveOk(dic))
-        {
-            isStop = true;
-        }
+        //if(gameManager.OnMoveOk(dic))
+        //{
+        //    isStop = true;
+        //}
 
         //横移動
         if (Input.GetKeyDown(KeyCode.LeftArrow))
