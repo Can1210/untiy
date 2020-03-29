@@ -102,13 +102,11 @@ public class GamePlayManager : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            if (p == worldPos[x, 1])
             {
-                if (p == worldPos[x, y])
-                {
-                    return true;
-                }
+                return true;
             }
+
         }
         return false;
     }
