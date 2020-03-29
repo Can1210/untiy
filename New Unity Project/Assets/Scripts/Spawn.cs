@@ -67,7 +67,7 @@ public class Spawn : MonoBehaviour
 
             InstansObject[index].transform.position = transform.position;
             InstansObject[index].GetComponent<Block_test>().ChildrenMove(); //動くようにする
-
+            InstansObject[index].GetComponent<Block_test>().isStop = false; //ここだけ変えた
             InstansObject.Remove(InstansObject[index]);
 
             objIndex--;
