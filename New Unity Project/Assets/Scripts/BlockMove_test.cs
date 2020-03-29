@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class BlockMove_test : MonoBehaviour
 {
-
-    private bool anyTouch;
-
     [SerializeField]
     private int downSpeed = -1;  //落ちるスピード
     [SerializeField]
     private int upSpeed;    //上昇スピード
-
-    private Rigidbody rigid;
 
     public bool isStop;
 
@@ -35,7 +30,7 @@ public class BlockMove_test : MonoBehaviour
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
 
-        isStop = true;
+        //isStop = true;
         moveOk = false;
 
         time = 0;
@@ -46,15 +41,15 @@ public class BlockMove_test : MonoBehaviour
     void Update()
     {
                                //↓落ちるスピード
-        time += Time.deltaTime * 2.5f;
-        if (time >= 1)
-        {
-            currenTime += (int)time;
-            time = 0;
-            moveOk = true;
-        }
+        //time += Time.deltaTime * 2.5f;
+        //if (time >= 1)
+        //{
+        //    currenTime += (int)time;
+        //    time = 0;
+        //    moveOk = true;
+        //}
 
-        Move();
+        //Move();
     }
 
     //移動
