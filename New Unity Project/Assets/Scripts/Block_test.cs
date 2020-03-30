@@ -100,7 +100,14 @@ public class Block_test : MonoBehaviour
             dic += new Vector3(xPos, 0, 0);
         }
 
-        transform.position = dic;
+        //子供たちの場所から確認
+        for(int i = 0;i < childPos.Length; i++)
+        {
+            if(gameManager.OnCubeOfWallCheck(childPos[i].position ,dic))
+            {
+                transform.position = dic;
+            }
+        }
     }
 
     public void ChildrenStop()

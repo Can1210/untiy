@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BlockMove_test : MonoBehaviour
 {
+
+    //移植したところは消してもいい使ってない
     [SerializeField]
     private int downSpeed = -1;  //落ちるスピード
     [SerializeField]
@@ -24,6 +26,8 @@ public class BlockMove_test : MonoBehaviour
 
     private int xPos = 0;
     private Vector3 dic;
+
+    
 
     // Start is called before the first frame update
     void Start()
