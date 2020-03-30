@@ -113,10 +113,25 @@ public class GamePlayManager : MonoBehaviour
 
 
     //自分の座標にCubeがあった場合trueを返す  正直いらん
-    public bool OnCubeCheck(Vector3 p)
+    //3/29やっぱ使う、自分の場所にキューブか壁があったら
+    public bool OnCubeOfWallCheck(Vector3 p, Vector3 next)
     {
-        if(inArrays[(int)p.x,(int)p.y] == InArray.Cube)
+        //if(inArrays[(int)p.x,(int)p.y] == InArray.Cube)
+        //{
+        //    Debug.Log("d");
+        //    return true;
+        //}
+        //if (inArrays[(int)p.x, (int)p.y] == InArray.Wall)
+        //{
+        //    Debug.Log("d");
+        //    return true;
+        //}
+
+        if (inArrays[(int)next.x, (int)next.y] == InArray.Space)
         {
+            inArrays[(int)next.x, (int)next.y] = InArray.Cube;
+            inArrays[(int)p.x, (int)p.y] = InArray.Space;
+
             return true;
         }
 
@@ -148,6 +163,7 @@ public class GamePlayManager : MonoBehaviour
     //入れ替えcube  space
     public Vector3 inCubeArray(Vector3 p, Vector3 Previous)
     {
+        //for分で回す必要なくね、だけど消さない
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
