@@ -96,6 +96,6 @@ public class Spawn : MonoBehaviour
 
         if (choiceCount <= 0) choiceCount = 0;  //0以下にはしない
         if (choiceCount >= InstansObject.Count - 1) choiceCount = InstansObject.Count - 1; //オブジェクトの数を超えない
-        Debug.Log("今の数字" + choiceCount);
+        //Debug.Log("今の数字" + choiceCount);
     }
 }
