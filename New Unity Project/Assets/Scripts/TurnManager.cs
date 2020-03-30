@@ -6,7 +6,6 @@ using UnityEngine;
 //ターンの管理
 public class TurnManager : MonoBehaviour
 {
-    [SerializeField]
     private GameObject turnChangeObj;     //ターンを管理しているクラス
     private TurnChange turnChange;
 
@@ -16,7 +15,7 @@ public class TurnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        turnChange = turnChangeObj.GetComponent<TurnChange>();
+        turnChange = GetComponent<TurnChange>();
         objList.Clear(); //最初は空にする
     }
 
