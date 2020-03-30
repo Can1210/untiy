@@ -24,10 +24,17 @@ public class GamePlayManager : MonoBehaviour
         Cube,
         Wall,
 
+        FixedBlock,//固定されたBlock
+
         None,
     }
 
     private InArray[,] inArrays = new InArray[width, height];
+
+    //前の情報を記録するための
+    private InArray[,] previousArrays = new InArray[width, height];
+
+    private InArray[,] wallAndSpaceArrays = new InArray[width, height];
 
     // Start is called before the first frame update
     void Awake()
@@ -53,6 +60,9 @@ public class GamePlayManager : MonoBehaviour
         inSpaceArray();
         WallArray();
 
+        wallAndSpaceArrays = inArrays;
+        previousArrays = wallAndSpaceArrays;
+
         time = 0;
         currenTime = 0;
     }
@@ -77,9 +87,15 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    //前の情報を入れる
+    public void PreviousArray()
+    {
+        previousArrays = inArrays;
+    }
+    //前の情報を入れたら現在の情報に入れる
     public void CurrentArray()
     {
-       
+        //inArrays = previousArrays;
     }
 
     public Vector3 MapOn(Vector3 p)
@@ -111,30 +127,156 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-
-    //自分の座標にCubeがあった場合trueを返す  正直いらん
-    //3/29やっぱ使う、自分の場所にキューブか壁があったら
-    public bool OnCubeOfWallCheck(Vector3 p, Vector3 next)
+    public void FixedBlock(Vector3 p)
     {
-        //if(inArrays[(int)p.x,(int)p.y] == InArray.Cube)
-        //{
-        //    Debug.Log("d");
-        //    return true;
-        //}
-        //if (inArrays[(int)p.x, (int)p.y] == InArray.Wall)
-        //{
-        //    Debug.Log("d");
-        //    return true;
-        //}
-
-        if (inArrays[(int)next.x, (int)next.y] == InArray.Space)
+        for (int x = 0; x < width; ++x)
         {
-            inArrays[(int)next.x, (int)next.y] = InArray.Cube;
-            inArrays[(int)p.x, (int)p.y] = InArray.Space;
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    inArrays[(int)p.x, (int)p.y] = InArray.FixedBlock;
+                }
+            }
+        }
+    }
 
-            return true;
+    public bool OnBlockCheck(Vector3 p, Vector3 next)
+    {
+        int nx = (int)next.x;
+        int ny = (int)next.y;
+
+        int dx = nx - (int)p.x;
+        int dy = ny - (int)p.y;
+        //下
+        if (dy < 0 && dx == 0)
+        {
+            for (int y = ny; y >= 0; y--)
+            {
+                if (inArrays[nx, y] == InArray.Space)
+                {
+                    return false;
+                }
+                else if (inArrays[nx, y] == InArray.Wall)
+                {
+                    return true;
+                }
+                else if(inArrays[nx,y] == InArray.FixedBlock)//すでに固定された
+                {
+                    return true;
+                }
+            }
+        }
+        //上
+        else if (dy > 0 && dx == 0)
+        {
+            for (int y = ny; y < height; y++)
+            {
+                if (inArrays[nx, y] == InArray.Space)
+                {
+                    return false;
+                }
+                else if (inArrays[nx, y] == InArray.Wall)
+                {
+                    return true;
+                }
+                else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
+                {
+                    return true;
+                }
+            }
         }
 
+        return false;
+    }
+
+    public bool OnCubeOfWallCheck(Vector3 p,Vector3 next)
+    {
+        int nx = (int)next.x;
+        int ny = (int)next.y;
+
+        int dx = nx - (int)p.x;
+        int dy = ny - (int)p.y;
+
+        //右
+        if(dx > 0)
+        {
+            for(int x = nx;x < width;x++)
+            {
+                if(inArrays[x, ny] == InArray.Space)
+                {
+                    return true;
+                }
+                else if(inArrays[x,ny] == InArray.Wall)
+                {
+                    return false;
+                }
+                else if (inArrays[x, ny] == InArray.FixedBlock)
+                {
+                    return false;
+                }
+            }
+        }
+        //左
+        else if (dx < 0)
+        {
+            for (int x = nx; x >= 0; x--)
+            {
+                if (inArrays[x, ny] == InArray.Space)
+                {
+                    return true;
+                }
+                else if (inArrays[x, ny] == InArray.Wall)
+                {
+                    return false;
+                }
+                else if (inArrays[x, ny] == InArray.FixedBlock)
+                {
+                    return false;
+                }
+            }
+        }
+        //下
+        else if (dy < 0)
+        {
+            for (int y = ny; y >= 0; y--)
+            {
+                if (inArrays[nx, y] == InArray.Space)
+                {
+                    return true;
+                }
+                else if (inArrays[nx, y] == InArray.Wall)
+                {
+                    return false;
+                }
+            }
+        }
+        //上
+        else if (dy > 0)
+        {
+            for (int y = ny; y < height; y++)
+            {
+                if (inArrays[nx, y] == InArray.Space)
+                {
+                    return true;
+                }
+                else if (inArrays[nx, y] == InArray.Wall)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //キューブがあった場合止める
+    public bool isCubeToCubeStop(Vector3 next)
+    {
+        if (inArrays[(int)next.x, (int)next.y] == InArray.Cube)
+        {
+            return true;
+        }
         return false;
     }
 
@@ -163,17 +305,17 @@ public class GamePlayManager : MonoBehaviour
     //入れ替えcube  space
     public Vector3 inCubeArray(Vector3 p, Vector3 Previous)
     {
-        //for分で回す必要なくね、だけど消さない
+        //for分で回す必要めっちゃある
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
             {
-                if(p == worldPos[x,y])
+                if (p == worldPos[x, y])
                 {
                     inArrays[x, y] = InArray.Cube;
                 }
 
-                if(Previous != p && Previous == worldPos[x,y])
+                if (Previous != p && Previous == worldPos[x, y])
                 {
                     inArrays[x, y] = InArray.Space;
                 }
@@ -224,7 +366,7 @@ public class GamePlayManager : MonoBehaviour
                 switch (inArrays[x, y])
                 {
                     case InArray.Space:
-                        s += "  ";
+                        s += " .";
                         break;
                     case InArray.Cube:
                         s += "o";
@@ -232,6 +374,10 @@ public class GamePlayManager : MonoBehaviour
 
                     case InArray.Wall:
                         s += "a";
+                        break;
+
+                    case InArray.FixedBlock:
+                        s += "x";
                         break;
 
                     default:

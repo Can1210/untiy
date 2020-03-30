@@ -9,7 +9,7 @@ public class Cube : MonoBehaviour
     //enumで上がるターンが来たらターンを減らすだけのスクリプト
     private GamePlayManager gameManager;
 
-    private BlockMove_test blockMove_t;
+    private Block_test blocktest;
 
     private Vector3 previous;
 
@@ -20,7 +20,7 @@ public class Cube : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        blockMove_t = GetComponent<BlockMove_test>();//まだ使ってない使ったら消すコメ
+        blocktest = GetComponentInParent<Block_test>();       
 
         previous = new Vector3(1,1,0);//ゼロだと都合が悪い
         isMoveOMG = false;
@@ -29,8 +29,13 @@ public class Cube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //3/31
         gameManager.inCubeArray(transform.position,previous);
 
+        if(blocktest.isStop)
+        {
+            gameManager.FixedBlock(transform.position);
+        }
 
         previous = transform.position;//前のポジション
     }

@@ -86,16 +86,16 @@ public class BlockMove_test : MonoBehaviour
         //}
 
         //横移動
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            xPos = -1;
-            dic += new Vector3(xPos, 0, 0);
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            xPos =1;
-            dic += new Vector3(xPos, 0, 0);
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //{
+        //    xPos = -1;
+        //    dic += new Vector3(xPos, 0, 0);
+        //}
+        //if (Input.GetKeyDown(KeyCode.RightArrow))
+        //{
+        //    xPos =1;
+        //    dic += new Vector3(xPos, 0, 0);
+        //}
 
         transform.position = dic;
     }

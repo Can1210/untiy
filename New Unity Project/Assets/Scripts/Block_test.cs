@@ -6,21 +6,21 @@ public class Block_test : MonoBehaviour
 {
     private BlockMove_test[] childrenMove;
 
-    private Transform[] childPos;
+    public Transform[] childPos;
 
     //BlockMove_testから移植
-    private Vector3 dic;
     private float time;
     private int currenTime;
     public bool isStop;
     private bool moveOk;
-    private int xPos = 0;
-    [SerializeField]
     private int downSpeed = -1;  //落ちるスピード
 
+    private Vector3[] previos;
 
     //神クラス Mapクラス
     private GamePlayManager gameManager;
+
+    private List<bool> b = new List<bool>();
 
     // Start is called before the first frame update
     void Start()
@@ -28,25 +28,20 @@ public class Block_test : MonoBehaviour
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
 
         childrenMove = transform.GetComponentsInChildren<BlockMove_test>();
-
-        childPos = transform.GetComponentsInChildren<Transform>();
-
+        //childPos = transform.GetComponentsInChildren<Transform>();
 
         //移植
         isStop = true;
         moveOk = false;
         time = 0;
         currenTime = 0;
+
+        previos = new Vector3[childPos.Length];
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    transform.position = gameManager.ZeroPosition(transform.position);
-        //}
-
         //↓落ちるスピード
         time += Time.deltaTime * 2.5f;
         if (time >= 1)
@@ -61,9 +56,9 @@ public class Block_test : MonoBehaviour
 
     //移動
     void Move()
-    {
-        dic = transform.position;
-        xPos = 0;
+    {       
+        //移動量
+        Vector3 d = Vector3.zero; 
 
         if (isStop)
         {
@@ -73,17 +68,12 @@ public class Block_test : MonoBehaviour
         if (moveOk)
         {
             //下に移動し続ける
-            dic += new Vector3(0, downSpeed, 0);
+            d = new Vector3(0, downSpeed, 0);
             moveOk = false;
         }
 
-        //一番下だったら止める  worldPos[x,1]←y座標の1は0にwallが入っているから
-        if (gameManager.UnderMap(transform.position))
-        {
-            isStop = true;
-        }
-
-        //if(gameManager.OnMoveOk(dic))
+        ////一番下だったら止める  worldPos[x,1]←y座標の1は0にwallが入っているから
+        //if (gameManager.UnderMap(transform.position))
         //{
         //    isStop = true;
         //}
@@ -91,23 +81,30 @@ public class Block_test : MonoBehaviour
         //横移動
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            xPos = -1;
-            dic += new Vector3(xPos, 0, 0);
+            d = new Vector3(-1f, downSpeed,0);
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            xPos = 1;
-            dic += new Vector3(xPos, 0, 0);
+            d = new Vector3(1f, downSpeed, 0);
         }
 
         //子供たちの場所から確認
-        for(int i = 0;i < childPos.Length; i++)
+        for (int i = 0;i < childPos.Length; i++)
         {
-            if(gameManager.OnCubeOfWallCheck(childPos[i].position ,dic))
+            if(gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d))
             {
-                transform.position = dic;
+                isStop = true;
+            }
+
+            if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + d))
+            {
+                return;
             }
         }
+
+        transform.position += d;
+
+        gameManager.PreviousArray();
     }
 
     public void ChildrenStop()

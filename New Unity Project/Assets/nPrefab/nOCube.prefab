@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turn: 0
+  isMoveOMG: 0
 --- !u!114 &6951060728926726452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,6 +27,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turn: 0
+  isMoveOMG: 0
 --- !u!1 &4380824471371519658
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,6 +75,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aec949a0ae8b9b4bb3d0a92358cc857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  childPos:
+  - {fileID: 131207765365968531}
+  - {fileID: 5272440338157857635}
+  - {fileID: 2194764821045351142}
+  - {fileID: 5490317848922026707}
+  isStop: 0
+  downSpeed: -1
 --- !u!114 &8783483032669767438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turn: 0
+  isMoveOMG: 0
 --- !u!114 &5149716592487433123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turn: 0
+  isMoveOMG: 0
 --- !u!1001 &4144041631711360980
 PrefabInstance:
   m_ObjectHideFlags: 0
