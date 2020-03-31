@@ -32,6 +32,13 @@ public class FryCount : MonoBehaviour
 
         childObject.transform.position = RectTransformUtility.WorldToScreenPoint(Camera.main, new Vector3(a.x, a.y, 0));
     }
+
+    public int fryCount
+    {
+        set { this.fryNum = value; }
+        get { return this.fryNum; }
+    }
+
     public int GetFryCount()
     {
         return fryNum;

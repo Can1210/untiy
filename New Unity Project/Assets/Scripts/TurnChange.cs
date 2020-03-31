@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum Turn
 {
-    Thinking,
-    PutIn,
-    Results,
+    Thinking,//選ぶ状態
+    PutIn,//落とした状態
+    Results,//上に上がった状態
 }
 
 
@@ -16,7 +16,7 @@ public class TurnChange : MonoBehaviour
 {
     //現在のターン
     static bool s_turnChange;        //外部から帰らる
-    private Turn nowTurn;            //現在のターン
+    public Turn nowTurn;            //現在のターン
 
     private bool roundEnd;           //ターンの終了
 
@@ -40,14 +40,17 @@ public class TurnChange : MonoBehaviour
     {
         switch (nowTurn)
         {
-            case Turn.Thinking:
+            case Turn.Thinking://選ばれたら切り替える
+
                 roundEnd = false;
                 CheckBool(Turn.PutIn);
                 break;
-            case Turn.PutIn:
+            case Turn.PutIn://選ばれたら落とす
+
                 CheckBool(Turn.Results);
                 break;
-            case Turn.Results:
+            case Turn.Results://上がるのがなければシンキングに戻るようにする
+
                 CheckBool(Turn.Thinking);
                 roundEnd = true;
                 break;
@@ -56,7 +59,7 @@ public class TurnChange : MonoBehaviour
         }
     }
 
-    void ChangeTurn(Turn turn)
+    public void ChangeTurn(Turn turn)
     {
         nowTurn = turn;
     }

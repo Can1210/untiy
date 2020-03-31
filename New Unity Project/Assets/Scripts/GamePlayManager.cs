@@ -172,17 +172,27 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = ny; y < height; y++)
             {
-                if (inArrays[nx, y] == InArray.Space)
+                //今だけ
+                for (int xb = 0; xb < width; ++xb)
                 {
-                    return false;
-                }
-                else if (inArrays[nx, y] == InArray.Wall)
-                {
-                    return true;
-                }
-                else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
-                {
-                    return true;
+                    for (int yb = 0; yb < height; ++yb)
+                    {
+                        if (next == worldPos[xb, yb])
+                        {
+                            if (inArrays[nx, y] == InArray.Space)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[nx, y] == InArray.Wall)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
+                            {
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -260,17 +270,27 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = ny; y < height; y++)
             {
-                if (inArrays[nx, y] == InArray.Space)
+                //今だけ
+                for (int xb = 0; xb < width; ++xb)
                 {
-                    return true;
-                }
-                else if (inArrays[nx, y] == InArray.Wall)
-                {
-                    return false;
-                }
-                else if (inArrays[nx, y] == InArray.FixedBlock)
-                {
-                    return false;
+                    for (int yb = 0; yb < height; ++yb)
+                    {
+                        if (next == worldPos[xb, yb])
+                        {
+                            if (inArrays[nx, y] == InArray.Space)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[nx, y] == InArray.Wall)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[nx, y] == InArray.FixedBlock)
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
         }
