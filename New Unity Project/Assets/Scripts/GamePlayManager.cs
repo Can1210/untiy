@@ -141,6 +141,20 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    public void NotFixedBlock(Vector3 p)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    inArrays[(int)p.x, (int)p.y] = InArray.Cube;
+                }
+            }
+        }
+    }
+
     public bool OnBlockCheck(Vector3 p, Vector3 next)
     {
         int nx = (int)next.x;
@@ -153,17 +167,27 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = ny; y >= 0; y--)
             {
-                if (inArrays[nx, y] == InArray.Space)
+                //今だけ
+                for (int xb = 0; xb < width; ++xb)
                 {
-                    return false;
-                }
-                else if (inArrays[nx, y] == InArray.Wall)
-                {
-                    return true;
-                }
-                else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
-                {
-                    return true;
+                    for (int yb = 0; yb < height; ++yb)
+                    {
+                        if (next == worldPos[xb, yb])
+                        {
+                            if (inArrays[nx, y] == InArray.Space)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[nx, y] == InArray.Wall)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
+                            {
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -213,17 +237,27 @@ public class GamePlayManager : MonoBehaviour
         {
             for(int x = nx;x < width;x++)
             {
-                if(inArrays[x, ny] == InArray.Space)
+                //今だけ
+                for (int xb = 0; xb < width; ++xb)
                 {
-                    return true;
-                }
-                else if(inArrays[x,ny] == InArray.Wall)
-                {
-                    return false;
-                }
-                else if (inArrays[x, ny] == InArray.FixedBlock)
-                {
-                    return false;
+                    for (int yb = 0; yb < height; ++yb)
+                    {
+                        if (next == worldPos[xb, yb])
+                        {
+                            if (inArrays[x, ny] == InArray.Space)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[x, ny] == InArray.Wall)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[x, ny] == InArray.FixedBlock)
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -232,17 +266,27 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int x = nx; x >= 0; x--)
             {
-                if (inArrays[x, ny] == InArray.Space)
+                //今だけ
+                for (int xb = 0; xb < width; ++xb)
                 {
-                    return true;
-                }
-                else if (inArrays[x, ny] == InArray.Wall)
-                {
-                    return false;
-                }
-                else if (inArrays[x, ny] == InArray.FixedBlock)
-                {
-                    return false;
+                    for (int yb = 0; yb < height; ++yb)
+                    {
+                        if (next == worldPos[xb, yb])
+                        {
+                            if (inArrays[x, ny] == InArray.Space)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[x, ny] == InArray.Wall)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[x, ny] == InArray.FixedBlock)
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -251,17 +295,28 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = ny; y >= 0; y--)
             {
-                if (inArrays[nx, y] == InArray.Space)
+                //今だけ
+                for (int xb = 0; xb < width; ++xb)
                 {
-                    return true;
-                }
-                else if (inArrays[nx, y] == InArray.Wall)
-                {
-                    return false;
-                }
-                else if (inArrays[nx, y] == InArray.FixedBlock)
-                {
-                    return false;
+                    for (int yb = 0; yb < height; ++yb)
+                    {
+                        if (next == worldPos[xb, yb])
+                        {
+
+                            if (inArrays[nx, y] == InArray.Space)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[nx, y] == InArray.Wall)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[nx, y] == InArray.FixedBlock)
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -36,6 +36,10 @@ public class Cube : MonoBehaviour
         {
             gameManager.FixedBlock(transform.position);
         }
+        else if(!blocktest.isStop)
+        {            
+            gameManager.NotFixedBlock(transform.position);
+        }
 
         previous = transform.position;//前のポジション
     }

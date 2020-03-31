@@ -49,7 +49,7 @@ public class Block_test : MonoBehaviour
         blockState = CurrntBlockState.DownBlock;
 
         //移植
-        isStop = true;
+        isStop = false;
         moveOk = false;
         time = 0;
         currenTime = 0;
@@ -77,19 +77,23 @@ public class Block_test : MonoBehaviour
 
     //移動
     void Move()
-    {       
+    {
         //移動量
-        Vector3 d = Vector3.zero; 
-
-        if(Input.GetKeyDown(KeyCode.N) && blockState == CurrntBlockState.StopBlock)
+        Vector3 d = Vector3.zero;
+        if (Input.GetKeyDown(KeyCode.N) && blockState == CurrntBlockState.StopBlock)
         {
-            Debug.Log("上がる");
+            for (int i = 0; i < childPos.Length; i++)
+            {
+                gameManager.NotFixedBlock(childPos[i].position);
+            }
             blockState = CurrntBlockState.UpBlock;
             isStop = false;
         }
 
         if (isStop)
         {
+            blockState = CurrntBlockState.StopBlock;
+
             return;
         }
 
@@ -108,7 +112,7 @@ public class Block_test : MonoBehaviour
                 d = new Vector3(0, upSpeed, 0);
             }
             else if (blockState == CurrntBlockState.StopBlock)
-            {
+            {              
                 //とまる
                 d = new Vector3(0, 0, 0);
             }
@@ -116,14 +120,8 @@ public class Block_test : MonoBehaviour
             moveOk = false;
         }
 
-        ////一番下だったら止める  worldPos[x,1]←y座標の1は0にwallが入っているから
-        //if (gameManager.UnderMap(transform.position))
-        //{
-        //    isStop = true;
-        //}
-
         //ダウンの時だけ移動できる
-        if(blockState == CurrntBlockState.DownBlock)
+        if (blockState == CurrntBlockState.DownBlock)
         {
             //横移動
             if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -136,14 +134,12 @@ public class Block_test : MonoBehaviour
             }
         }
 
-
         //子供たちの場所から確認
-        for (int i = 0;i < childPos.Length; i++)
+        for (int i = 0; i < childPos.Length; i++)
         {
-            if(gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d)
-                && blockState == CurrntBlockState.DownBlock)
+            if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
+                blockState != CurrntBlockState.StopBlock)
             {
-                blockState = CurrntBlockState.StopBlock;
                 isStop = true;
             }
 
@@ -152,6 +148,7 @@ public class Block_test : MonoBehaviour
                 return;
             }
         }
+
 
         transform.position += d;
 
