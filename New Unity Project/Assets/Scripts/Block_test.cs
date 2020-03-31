@@ -43,7 +43,7 @@ public class Block_test : MonoBehaviour
     void Update()
     {
         //↓落ちるスピード
-        time += Time.deltaTime * 2.5f;
+        time += Time.deltaTime * 1.5f;
         if (time >= 1)
         {
             currenTime += (int)time;

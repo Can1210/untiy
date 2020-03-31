@@ -161,7 +161,7 @@ public class GamePlayManager : MonoBehaviour
                 {
                     return true;
                 }
-                else if(inArrays[nx,y] == InArray.FixedBlock)//すでに固定された
+                else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
                 {
                     return true;
                 }
@@ -249,6 +249,10 @@ public class GamePlayManager : MonoBehaviour
                 {
                     return false;
                 }
+                else if (inArrays[nx, y] == InArray.FixedBlock)
+                {
+                    return false;
+                }
             }
         }
         //上
@@ -261,6 +265,10 @@ public class GamePlayManager : MonoBehaviour
                     return true;
                 }
                 else if (inArrays[nx, y] == InArray.Wall)
+                {
+                    return false;
+                }
+                else if (inArrays[nx, y] == InArray.FixedBlock)
                 {
                     return false;
                 }
