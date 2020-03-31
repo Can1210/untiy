@@ -16,13 +16,12 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         turnChange = GetComponent<TurnChange>();
-        objList.Clear(); //最初は空にする
+        //objList.Clear(); //最初は空にする
     }
 
     // Update is called once per frame
     void Update()
     {
-
         AdvanceTurn();
     }
 
@@ -31,8 +30,6 @@ public class TurnManager : MonoBehaviour
     {
         objList.Add(gameObject);
     }
-
-
 
     void RemoveObj()
     {
@@ -54,9 +51,8 @@ public class TurnManager : MonoBehaviour
     //ターンを経過させる
     void AdvanceTurn()
     {
-        if(turnChange.GetRoundEnd())
+        if (turnChange.GetRoundEnd())
         {
-            Debug.Log("ターンを一つ進める");
         }
     }
 }
