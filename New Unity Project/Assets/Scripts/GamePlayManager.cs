@@ -21,9 +21,10 @@ public class GamePlayManager : MonoBehaviour
     public enum InArray
     {
         Space,
+        OutOfOil,//オイル外
+
         Cube,
         Wall,
-
         FixedBlock,//固定されたBlock
 
         None,
@@ -59,8 +60,12 @@ public class GamePlayManager : MonoBehaviour
 
         inSpaceArray();
         WallArray();
-
         wallAndSpaceArrays = inArrays;
+
+        //オイルの外エリアを追加    12,22
+        //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
+        OutOfOil(1, 18, width - 1, height - 1);
+
         previousArrays = wallAndSpaceArrays;
 
         time = 0;
@@ -98,6 +103,17 @@ public class GamePlayManager : MonoBehaviour
         //inArrays = previousArrays;
     }
 
+    public void OutOfOil(int ax,int ay,int w,int h)
+    {
+        for (int x = ax; x < w; x++)
+        {
+            for (int y = ay; y < h; y++)
+            {
+                inArrays[x,y] = InArray.OutOfOil;
+            }
+        }
+    }
+
     public Vector3 MapOn(Vector3 p)
     {
         for (int x = 0; x < width; x++)
@@ -122,7 +138,6 @@ public class GamePlayManager : MonoBehaviour
             {
                 return true;
             }
-
         }
         return false;
     }
@@ -461,6 +476,10 @@ public class GamePlayManager : MonoBehaviour
 
                     case InArray.FixedBlock:
                         s += "x";
+                        break;
+
+                    case InArray.OutOfOil:
+                        s += "^";
                         break;
 
                     default:

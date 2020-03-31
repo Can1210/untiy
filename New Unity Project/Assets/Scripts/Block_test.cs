@@ -148,8 +148,6 @@ public class Block_test : MonoBehaviour
                 return;
             }
         }
-
-
         transform.position += d;
 
         gameManager.PreviousArray();
