@@ -6,53 +6,40 @@ using UnityEngine;
 //ターンの管理
 public class TurnManager : MonoBehaviour
 {
-    private GameObject turnChangeObj;     //ターンを管理しているクラス
-    private TurnChange turnChange;
+    private List<FryCount> objList;
 
-    private List<GameObject> objList;
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        turnChange = GetComponent<TurnChange>();
-        //objList.Clear(); //最初は空にする
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        AdvanceTurn();
+        objList = new List<FryCount>();
+        objList.Clear(); //最初は空にする
     }
 
     //オブジェクトの追加
-    public void Add(GameObject gameObject)
+    public void Add(Transform[] gameObject)
     {
-        objList.Add(gameObject);
-    }
-
-    void RemoveObj()
-    {
-        foreach(var obj in objList)
+        //現状0～8    0368
+        for (int i =0;i <gameObject.Length;i++)
         {
-            //オブジェクトがないなら  ここisEndFlagを基底クラスで作る
-            if (obj)
-                objList.Remove(obj);
+            if (i == 0 || i==3 || i== 6|| i ==8)
+            {
+                var kari = gameObject[i].GetComponentInChildren<FryCount>();
+                objList.Add(kari);   //子供の子供
+            }
+        }
+        
+    }
+    //一斉カウントを進める
+    public void CountDown()
+    {
+        foreach (var obj in objList)
+        {
+            obj.FryCountDown();
+            //Debug.Log("今のカウント" + obj.GetFryCount());
         }
     }
-
-    //全体確認
-    void OverallConfirmation()
+    //削除
+    public void RemoveObj()
     {
 
-        //bool check = objList.TrueForAll(isActiveAndEnabled);
-    }
-
-    //ターンを経過させる
-    void AdvanceTurn()
-    {
-        if (turnChange.GetRoundEnd())
-        {
-        }
     }
 }
