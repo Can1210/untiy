@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//他で参照するからクラスの外に出した。
+public enum CurrntBlockState
+{
+    DownBlock,//落ちてくる
+    StopBlock,//FixedBLOCK
+    UpBlock,//上に上がる
+
+    None,
+}
+
 public class Block_test : MonoBehaviour
 {
     //神クラス Mapクラス
     private GamePlayManager gameManager;
-
-    //Turnがあったらいいな
-    private TurnChange turn;
 
     private BlockMove_test[] childrenMove;
 
@@ -27,19 +34,11 @@ public class Block_test : MonoBehaviour
 
     private Vector3[] previos;
 
-    //フライカウント
-    private FryCount[] f;
+    public CurrntBlockState blockState;
 
-    private CurrntBlockState blockState;
-
-    private enum CurrntBlockState
-    {
-        DownBlock,//落ちてくる
-        StopBlock,//FixedBLOCK
-        UpBlock,//上に上がる
-
-        None,
-    }
+    public int turnCount = 1;
+    //オイル外に入ったかどうか
+    public bool isOilOut = false;
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +55,6 @@ public class Block_test : MonoBehaviour
         moveOk = false;
         time = 0;
         currenTime = 0;
-
         //フライカウント
         f = GetComponentsInChildren<FryCount>();
 
@@ -67,7 +65,7 @@ public class Block_test : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //↓落ちるスピード
+        //                       ↓落ちるスピード
         time += Time.deltaTime * 3.5f;
         if (time >= 1)
         {
@@ -92,7 +90,17 @@ public class Block_test : MonoBehaviour
         {
             for (int i = 0; i < childPos.Length; i++)
             {
-                gameManager.NotFixedBlock(childPos[i].position);
+                turnCount = childPos[i].transform.GetComponentInChildren<FryCount>().fryCount;
+                //Debug.Log(index);
+                if (turnCount == 0)
+                {
+                    gameManager.Zero(childPos[i].position);
+                }
+                else if (turnCount != 0)
+                {
+                    //キューブに変える
+                    gameManager.NotFixedBlock(childPos[i].position);
+                }
             }
             blockState = CurrntBlockState.UpBlock;
             isStop = false;
@@ -135,7 +143,7 @@ public class Block_test : MonoBehaviour
                 d = new Vector3(0, upSpeed, 0);
             }
             else if (blockState == CurrntBlockState.StopBlock)
-            {              
+            {
                 //とまる
                 d = new Vector3(0, 0, 0);
             }
@@ -156,7 +164,6 @@ public class Block_test : MonoBehaviour
                 d = new Vector3(1f, downSpeed, 0);
             }
         }
-
         //子供たちの場所から確認
         for (int i = 0; i < childPos.Length; i++)
         {
@@ -166,12 +173,21 @@ public class Block_test : MonoBehaviour
                 isStop = true;
             }
 
+            if (gameManager.CheckOid(childPos[i].position, childPos[i].position + d))
+            {
+                isOilOut = true;
+            }
+
+            if (gameManager.OilOnCheckZero(childPos[i].position))
+            {
+                return;
+            }
+
             if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + d))
             {
                 return;
             }
         }
-
 
         transform.position += d;
 

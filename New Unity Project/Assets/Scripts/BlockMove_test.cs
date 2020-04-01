@@ -27,8 +27,6 @@ public class BlockMove_test : MonoBehaviour
     private int xPos = 0;
     private Vector3 dic;
 
-    
-
     // Start is called before the first frame update
     void Start()
     {
