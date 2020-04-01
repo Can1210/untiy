@@ -22,6 +22,7 @@ public class Block_test : MonoBehaviour
 
     public Transform[] childPos;
 
+
     //BlockMove_testから移植
     private float time;
     private int currenTime;
@@ -39,6 +40,9 @@ public class Block_test : MonoBehaviour
     public int turnCount = 1;
     //オイル外に入ったかどうか
     public bool isOilOut = false;
+
+    private TurnChange turn;
+    private FryCount[] f;
 
     // Start is called before the first frame update
     void Start()
