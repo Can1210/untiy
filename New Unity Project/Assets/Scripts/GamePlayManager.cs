@@ -73,10 +73,10 @@ public class GamePlayManager : MonoBehaviour
         //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
         OutOfOil(1, 18, width - 1, height - 1);
 
-        for(int x = 1;x<width - 1;x++)
-        {
-            inArrays[x, 20] = InArray.T_Wall;
-        }
+        //for(int x = 1;x<width - 1;x++)
+        //{
+        //    inArrays[x, 20] = InArray.T_Wall;
+        //}
 
         previousArrays = wallAndSpaceArrays;
 
@@ -261,11 +261,11 @@ public class GamePlayManager : MonoBehaviour
                             }
                             else if (inArrays[nx, y] == InArray.OutOfOil)
                             {
-                                return false;
+                                return true;
                             }
                             else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
                             {
-                                return false;
+                                return true;
                             }
                             else if (inArrays[nx, y] == InArray.UpFixedBlock)
                             {
@@ -413,8 +413,8 @@ public class GamePlayManager : MonoBehaviour
                                 {
                                     return false;
                                 }
-
-                                return true;
+                                //とりあえずどっちも
+                                return false;
                             }
                             else if (inArrays[nx, y] == InArray.Wall)
                             {
@@ -422,7 +422,7 @@ public class GamePlayManager : MonoBehaviour
                             }
                             else if (inArrays[nx, y] == InArray.FixedBlock)
                             {
-                                return true;
+                                return false;
                             }
                             //Mapの上に固定されたブロックがある場合
                             else if (inArrays[nx, y] == InArray.UpFixedBlock)
