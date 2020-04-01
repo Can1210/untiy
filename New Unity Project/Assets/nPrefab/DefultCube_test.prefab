@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
-  fryNum: 0
+  fryNum: 3
 --- !u!1 &6748289891063184548
 GameObject:
   m_ObjectHideFlags: 0

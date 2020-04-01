@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Block_test : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class Block_test : MonoBehaviour
     private int downSpeed = -1;  //落ちるスピード
     private int upSpeed = 1;
 
+    private bool isFry;          //揚げられているか
+
     private Vector3[] previos;
 
     //フライカウント
@@ -42,7 +45,7 @@ public class Block_test : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        turn = GameObject.Find("GamePlayManager").GetComponent<TurnChange>();
+        turn = gameManager.GetComponent<TurnChange>();
 
         childrenMove = transform.GetComponentsInChildren<BlockMove_test>();
 
@@ -58,6 +61,7 @@ public class Block_test : MonoBehaviour
         f = GetComponentsInChildren<FryCount>();
 
         previos = new Vector3[childPos.Length];
+        isFry = false;    //最初は挙げられていない
     }
 
     // Update is called once per frame
@@ -79,8 +83,12 @@ public class Block_test : MonoBehaviour
     void Move()
     {
         //移動量
-        Vector3 d = Vector3.zero;
-        if (Input.GetKeyDown(KeyCode.N) && blockState == CurrntBlockState.StopBlock)
+        Vector3 d = Vector3.zero;    //毎回0で初期化
+
+        //リザルト中　かつ　止まっている　かつフライカウントが0以下の時　上がる
+        if (turn.GetTurn() == Turn.Results &&
+           blockState == CurrntBlockState.StopBlock &&
+           CheckFryCount())
         {
             for (int i = 0; i < childPos.Length; i++)
             {
@@ -89,10 +97,25 @@ public class Block_test : MonoBehaviour
             blockState = CurrntBlockState.UpBlock;
             isStop = false;
         }
-
+        //上に上がる処理
+        //if (Input.GetKeyDown(KeyCode.N) && blockState == CurrntBlockState.StopBlock)
+        //{
+        //    for (int i = 0; i < childPos.Length; i++)
+        //    {
+        //        gameManager.NotFixedBlock(childPos[i].position);
+        //    }
+        //    blockState = CurrntBlockState.UpBlock;
+        //    isStop = false;
+        //}
         if (isStop)
         {
+            //最初だけ呼ばれる
+            if (blockState == CurrntBlockState.StopBlock)
+                return;
             blockState = CurrntBlockState.StopBlock;
+
+            turn.SetTurnChange();    //下についたらターンを切り替える
+            Debug.Log("地面についた");
 
             return;
         }
@@ -155,6 +178,19 @@ public class Block_test : MonoBehaviour
         gameManager.PreviousArray();
     }
 
+    //揚げられているかどうかを調べる
+    bool CheckFryCount()
+    {
+        //どれか一つでも0なら上げる
+        for (int i = 0; i < f.Length; i++)
+        {
+            if (f[i].GetFryCount() <= 0)
+                return true;
+        }
+        return false;
+    }
+
+
     public void ChildrenStop()
     {
         for (int i = 0; i < childrenMove.Length; i++)
@@ -170,4 +206,5 @@ public class Block_test : MonoBehaviour
             childrenMove[i].isStop = false;
         }
     }
+
 }
