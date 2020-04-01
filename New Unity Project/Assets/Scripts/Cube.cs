@@ -30,16 +30,34 @@ public class Cube : MonoBehaviour
     void Update()
     {
         //3/31
-        gameManager.inCubeArray(transform.position,previous);
+        //毎回描画する奴ら
 
-        if(blocktest.isStop)
+        if (blocktest.isStop && blocktest.blockState == CurrntBlockState.DownBlock)
         {
             gameManager.FixedBlock(transform.position);
         }
-        else if(!blocktest.isStop)
-        {            
-            gameManager.NotFixedBlock(transform.position);
+        else if (blocktest.isStop && blocktest.blockState == CurrntBlockState.UpBlock)
+        {
+            gameManager.UpFixedBlock(transform.position);
         }
+
+        //こっちは普通の
+        else if (!blocktest.isStop &&  blocktest.blockState != CurrntBlockState.StopBlock &&  blocktest.turnCount != 0 && !blocktest.isOilOut)
+        {
+            gameManager.inCubeArray(transform.position, previous);
+        }
+        //オイル外
+        else if (!blocktest.isStop && blocktest.blockState != CurrntBlockState.StopBlock && blocktest.turnCount != 0 && blocktest.isOilOut)
+        {
+            gameManager.inOilOutArray(transform.position, previous);
+        }
+
+        //ここでカウントが0のやつの情報を入れてる
+        else if (!blocktest.isStop && blocktest.blockState != CurrntBlockState.StopBlock && blocktest.turnCount  == 0)
+        {
+            gameManager.inZeroArray(transform.position, previous);
+        }
+
 
         previous = transform.position;//前のポジション
     }

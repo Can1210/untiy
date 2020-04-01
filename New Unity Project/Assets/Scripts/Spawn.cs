@@ -62,6 +62,11 @@ public class Spawn : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+
+        }
+
         //Aボタンを押されてたらpositionを変更
         if (Input.GetKeyDown(KeyCode.A))
         {
