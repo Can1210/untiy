@@ -186,10 +186,15 @@ public class Block_test : MonoBehaviour
         transform.position += d;
     }
 
-<<<<<<< HEAD
     //最初はキューブを入れる
     public void InCube()
-=======
+    {
+        for (int i = 0; i < childPos.Length; i++)
+        {
+            gameManager.inCube(childPos[i].position);
+        }
+    }
+
     //揚げられているかどうかを調べる
     bool CheckFryCount()
     {
@@ -200,24 +205,6 @@ public class Block_test : MonoBehaviour
                 return true;
         }
         return false;
-    }
-
-
-    public void ChildrenStop()
-    {
-        for (int i = 0; i < childrenMove.Length; i++)
-        {
-            childrenMove[i].isStop = true;
-        }
-    }
-
-    public void ChildrenMove()
->>>>>>> 5038e60bb505a23ad40980282067c2b5e5fc1701
-    {
-        for (int i = 0; i < childPos.Length; i++)
-        {
-            gameManager.inCube(childPos[i].position);
-        }
     }
 
 }
