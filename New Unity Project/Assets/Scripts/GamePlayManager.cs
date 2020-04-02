@@ -3,12 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum InArray
+{
+    Space,//オイル内
+    OutOfOil,//オイル外
+    UpWall,//一番上の壁
+
+    Cube,
+    Wall,
+    DownFixedBlock,//下で固定されたBlock
+    UpFixedBlock,
+    Zero,
+
+    None,
+}
+
 public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance = null;
 
     const int width = 12;
     const int height = 22;
+
+    //blockクラスが参照するため
+    public int bWidth = width;
+    public int bHeight = height;
 
     public Vector3[,] worldPos = new Vector3[width, height];
 
@@ -17,21 +36,6 @@ public class GamePlayManager : MonoBehaviour
 
     string s = "";//デバッグ用
     public Text debugText;
-
-    public enum InArray
-    {
-        Space,//オイル内
-        OutOfOil,//オイル外
-        UpWall,//一番上の壁
-
-        Cube,
-        Wall,
-        DownFixedBlock,//下で固定されたBlock
-        UpFixedBlock,
-        Zero,
-
-        None,
-    }
 
     private InArray[,] inArrays = new InArray[width, height];
 
@@ -110,6 +114,24 @@ public class GamePlayManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    //自分の情報を返す
+    public InArray SelfState(Vector3 p)
+    {
+        InArray i = InArray.Space;
+
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    i = inArrays[x, y];
+                }
+            }
+        }
+        return i;
     }
 
     //自分が死ぬエリアにあったら
@@ -506,6 +528,24 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    //上がspaceじゃなかったら
+    public bool NotOnSpace(InArray[,] ina , Transform[] t)
+    {
+        for(int i = 0;i < t.Length; i++)
+        {
+            Vector3 p = t[i].position;
+            int px = (int)p.x;
+            int py = (int)p.y;
+
+            if (inArrays[px, py + 1] != InArray.Space && ina[px, py + 1] == InArray.Space)
+            {
+                //ブロックがあった場合他のやつのブロック
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void inOilOutArray(Vector3 p, Vector3 Previous)
     {
         //for分で回す必要めっちゃある
@@ -564,6 +604,22 @@ public class GamePlayManager : MonoBehaviour
                 inArrays[x, y] = InArray.Space;
             }
         }
+    }
+    //ブロッククラスの配列にスペースをコピー
+    public InArray[,] inSpaceBlocks(InArray[,] inBlocks)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if(x == worldPos[x,y].x && y == worldPos[x,y].y)
+                {
+                    inBlocks[x, y] = InArray.Space;
+                }
+            }
+        }
+
+        return inBlocks;
     }
 
     public void WallArray()//壁の情報を付ける
