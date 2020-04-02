@@ -94,4 +94,8 @@ public class TurnChange : MonoBehaviour
     {
         turnChange = true;
     }
+
+    //意味のないコミットを作る
+
+
 }
