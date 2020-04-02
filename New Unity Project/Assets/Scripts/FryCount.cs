@@ -19,7 +19,7 @@ public class FryCount : MonoBehaviour
         childObject = Instantiate(text, RectTransformUtility.WorldToScreenPoint(Camera.main, new Vector3(a.x, a.y, 0)), Quaternion.identity);
         
         GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
-        childObject.transform.parent = canvas.transform;
+        childObject.transform.SetParent(canvas.transform);
     }
     
     void Update()
