@@ -18,9 +18,11 @@ public class Block : MonoBehaviour
 {
     //神クラス Mapクラス
     private GamePlayManager gameManager;
+    private InArray[,] inBlocks;
+    private int width;
+    private int height;
 
     public Transform[] childPos;
-
 
     //BlockMove_testから移植
     private float time;
@@ -47,8 +49,13 @@ public class Block : MonoBehaviour
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
         turn = gameManager.GetComponent<TurnChange>();
+        width = gameManager.bWidth;
+        height = gameManager.bHeight;
 
         currentState = CurrentState.None;
+
+        inBlocks = new InArray[width, height];
+        inBlocks = gameManager.inSpaceBlocks(inBlocks);
 
         //移植
         moveOk = false;
@@ -73,10 +80,13 @@ public class Block : MonoBehaviour
             moveOk = true;
         }
 
-        if(currentState == CurrentState.None)
+        if (currentState == CurrentState.None)
         {
             return;
         }
+
+        //毎回更新
+        InBlocks(childPos);
 
         Move();
     }
@@ -86,9 +96,22 @@ public class Block : MonoBehaviour
     {
         //移動量
         Vector3 d = Vector3.zero;    //毎回0で初期化
-        
+
         if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop)
         {
+            //上に移動し続ける
+            d = new Vector3(0, upSpeed, 0);
+
+
+            if (gameManager.NotOnSpace(inBlocks, childPos))
+            {
+                currentState = CurrentState.DownStop;
+            }
+            else
+            {
+                currentState = CurrentState.Up;
+            }
+
             for (int i = 0; i < childPos.Length; i++)
             {
                 turnCount = childPos[i].transform.GetComponentInChildren<FryCount>().fryCount;
@@ -103,15 +126,6 @@ public class Block : MonoBehaviour
                     //キューブに変える
                     gameManager.NotFixedBlock(childPos[i].position);
                 }
-            }
-            currentState = CurrentState.Up;
-        }
-        //上で止まっているときの子供の確認
-        if (currentState == CurrentState.UpStop)
-        {
-            for (int i = 0; i < childPos.Length; i++)
-            {
-
             }
         }
 
@@ -194,4 +208,25 @@ public class Block : MonoBehaviour
         return false;
     }
 
+
+    private void InBlocks(Transform[] t)
+    {
+        //いったん真っ白にしてから
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                inBlocks[x, y] = InArray.Space;
+            }
+        }
+
+        //自分の情報を入れる
+        for (int i = 0; i < childPos.Length; i++)
+        {
+            int cx = (int)childPos[i].position.x;
+            int cy = (int)childPos[i].position.y;
+
+            inBlocks[cx, cy] = gameManager.SelfState(childPos[i].position);
+        }
+    }
 }
