@@ -2,39 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 //ターンの管理
 public class TurnManager : MonoBehaviour
 {
-    private List<FryCount> objList;
+    private List<FryCount> objList;     //生成されたオブジェクトのリスト
 
     void Start()
     {
         objList = new List<FryCount>();
-        objList.Clear(); //最初は空にする
+        objList.Clear();                //最初は空にする
     }
 
     //オブジェクトの追加
     public void Add(Transform[] gameObject)
     {
-        //現状0～8    0368
+        //現状0～8    0368  決め打ちだけどスンマソ
         for (int i =0;i <gameObject.Length;i++)
         {
             if (i == 0 || i==3 || i== 6|| i ==8)
             {
                 var kari = gameObject[i].GetComponentInChildren<FryCount>();
-                objList.Add(kari);   //子供の子供
+                objList.Add(kari);   //孫
             }
         }
-        
     }
-    //一斉カウントを進める
+    //一斉にカウントを進める
     public void CountDown()
     {
         foreach (var obj in objList)
         {
             obj.FryCountDown();
-            //Debug.Log("今のカウント" + obj.GetFryCount());
         }
     }
     //削除
