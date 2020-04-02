@@ -186,15 +186,6 @@ public class Block_test : MonoBehaviour
         transform.position += d;
     }
 
-    //最初はキューブを入れる
-    public void InCube()
-    {
-        for (int i = 0; i < childPos.Length; i++)
-        {
-            gameManager.inCube(childPos[i].position);
-        }
-    }
-
     //揚げられているかどうかを調べる
     bool CheckFryCount()
     {
