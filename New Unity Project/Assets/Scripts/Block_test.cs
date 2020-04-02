@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 //他で参照するからクラスの外に出した。
-public enum CurrntBlockState
+public enum CurrentState
 {
-    DownBlock,//落ちてくる
-    StopBlock,//FixedBLOCK
-    UpBlock,//上に上がる
+    Down,//落ちてくる
+    DownStop,//落ちてきて止める
+    Up,//上に上がる
+    UpStop,//上に上がって止める
 
     None,
 }
@@ -35,11 +36,13 @@ public class Block_test : MonoBehaviour
 
     private Vector3[] previos;
 
-    public CurrntBlockState blockState;
+    public CurrentState currentState;
 
     public int turnCount = 1;
     //オイル外に入ったかどうか
     public bool isOilOut = false;
+    //delet
+    public bool isDel = false;
 
     private TurnChange turn;
     private FryCount[] f;
@@ -52,7 +55,7 @@ public class Block_test : MonoBehaviour
 
         childrenMove = transform.GetComponentsInChildren<BlockMove_test>();
 
-        blockState = CurrntBlockState.DownBlock;
+        currentState = CurrentState.Down;
 
         //移植
         isStop = false;
@@ -78,6 +81,7 @@ public class Block_test : MonoBehaviour
             moveOk = true;
         }
 
+
         Move();
     }
 
@@ -86,18 +90,16 @@ public class Block_test : MonoBehaviour
     {
         //移動量
         Vector3 d = Vector3.zero;    //毎回0で初期化
-
-        //リザルト中　かつ　止まっている　かつフライカウントが0以下の時　上がる
-        if (turn.GetTurn() == Turn.Results &&
-           blockState == CurrntBlockState.StopBlock &&
-           CheckFryCount())
+        
+        if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop)
         {
             for (int i = 0; i < childPos.Length; i++)
             {
                 turnCount = childPos[i].transform.GetComponentInChildren<FryCount>().fryCount;
-                //Debug.Log(index);
+
                 if (turnCount == 0)
                 {
+                    //カウントが0ならゼロの情報にする
                     gameManager.Zero(childPos[i].position);
                 }
                 else if (turnCount != 0)
@@ -106,47 +108,45 @@ public class Block_test : MonoBehaviour
                     gameManager.NotFixedBlock(childPos[i].position);
                 }
             }
-            blockState = CurrntBlockState.UpBlock;
+            currentState = CurrentState.Up;
             isStop = false;
         }
-        //上に上がる処理
-        //if (Input.GetKeyDown(KeyCode.N) && blockState == CurrntBlockState.StopBlock)
-        //{
-        //    for (int i = 0; i < childPos.Length; i++)
-        //    {
-        //        gameManager.NotFixedBlock(childPos[i].position);
-        //    }
-        //    blockState = CurrntBlockState.UpBlock;
-        //    isStop = false;
-        //}
-        if (isStop)
+        //上で止まっているときの子供の確認
+        if (currentState == CurrentState.UpStop)
         {
-            //最初だけ呼ばれる
-            if (blockState == CurrntBlockState.StopBlock)
-                return;
-            blockState = CurrntBlockState.StopBlock;
+            for (int i = 0; i < childPos.Length; i++)
+            {
 
-            turn.SetTurnChange();    //下についたらターンを切り替える
-            Debug.Log("地面についた");
+            }
+        }
 
+        if (isStop && currentState == CurrentState.Up)
+        {
+            currentState = CurrentState.UpStop;
             return;
         }
+        else if (isStop && currentState == CurrentState.Down)
+        {
+            currentState = CurrentState.DownStop;
+            return;
+        }
+
 
         if (moveOk)
         {
             //下に行くなら移動量を下に
-            if (blockState == CurrntBlockState.DownBlock)
+            if (currentState == CurrentState.Down)
             {
                 //下に移動し続ける
                 d = new Vector3(0, downSpeed, 0);
             }
-            //下に行くなら移動量を下に
-            else if (blockState == CurrntBlockState.UpBlock)
+            //
+            else if (currentState == CurrentState.Up)
             {
                 //上に移動し続ける
                 d = new Vector3(0, upSpeed, 0);
             }
-            else if (blockState == CurrntBlockState.StopBlock)
+            else if (currentState == CurrentState.DownStop)
             {
                 //とまる
                 d = new Vector3(0, 0, 0);
@@ -156,7 +156,7 @@ public class Block_test : MonoBehaviour
         }
 
         //ダウンの時だけ移動できる
-        if (blockState == CurrntBlockState.DownBlock)
+        if (currentState == CurrentState.Down)
         {
             //横移動
             if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -168,23 +168,26 @@ public class Block_test : MonoBehaviour
                 d = new Vector3(1f, downSpeed, 0);
             }
         }
+
         //子供たちの場所から確認
         for (int i = 0; i < childPos.Length; i++)
         {
+            //落ちているとき
             if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
-                blockState != CurrntBlockState.StopBlock)
+                currentState == CurrentState.Down)
+            {
+                isStop = true;
+            }
+            //上がっているとき
+            else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
+                currentState == CurrentState.Up)
             {
                 isStop = true;
             }
 
-            if (gameManager.CheckOid(childPos[i].position, childPos[i].position + d))
+            if (gameManager.CheckOil(childPos[i].position, childPos[i].position + d))
             {
                 isOilOut = true;
-            }
-
-            if (gameManager.OilOnCheckZero(childPos[i].position))
-            {
-                return;
             }
 
             if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + d))
@@ -194,8 +197,6 @@ public class Block_test : MonoBehaviour
         }
 
         transform.position += d;
-
-        gameManager.PreviousArray();
     }
 
     //揚げられているかどうかを調べる

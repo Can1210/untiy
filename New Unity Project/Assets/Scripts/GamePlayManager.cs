@@ -26,13 +26,9 @@ public class GamePlayManager : MonoBehaviour
 
         Cube,
         Wall,
-        FixedBlock,//下で固定されたBlock
+        DownFixedBlock,//下で固定されたBlock
         UpFixedBlock,
         Zero,
-
-        T_Wall,//仮
-
-        CubeUnderCube,
 
         None,
     }
@@ -43,6 +39,9 @@ public class GamePlayManager : MonoBehaviour
     private InArray[,] previousArrays = new InArray[width, height];
 
     private InArray[,] wallAndSpaceArrays = new InArray[width, height];
+
+    private int dySize = 0;
+    private int dySizeMax = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -73,11 +72,6 @@ public class GamePlayManager : MonoBehaviour
         //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
         OutOfOil(1, 18, width - 1, height - 1);
 
-        //for(int x = 1;x<width - 1;x++)
-        //{
-        //    inArrays[x, 20] = InArray.T_Wall;
-        //}
-
         previousArrays = wallAndSpaceArrays;
 
         time = 0;
@@ -87,32 +81,60 @@ public class GamePlayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        NowTime();//    ほぼデバッグ用
+        //デスエリア更新
+        deathArea();
 
         arrayDebug();
     }
 
-    private void NowTime()
-    {                            //↓Blockmove_testとスピードを合わせれば常にわかる
-        time += Time.deltaTime;//  *  0.5f;
-        if (time % 60 >= 1)
+    public void deathArea()
+    {
+        for (int x = 0; x < width; ++x)
         {
-            currenTime += (int)time;
-            time = 0;
-
-            //arrayDebug();//ほぼデバッグ用
+            for (int y = 0; y < height; ++y)
+            {
+                if (inArrays[x, y] == InArray.Zero)
+                {
+                    dySizeMax = y;
+                }
+            }
         }
+
+        for (int x = width - 1; x >= 0; --x)
+        {
+            for (int y = height - 1; y >= 0; --y)
+            {
+                if (inArrays[x, y] == InArray.Zero)
+                {
+                    dySize = y;
+                }
+            }
+        }
+    }
+
+    //自分が死ぬエリアにあったら
+    public bool InDeathArea(Vector3 p)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    if (inArrays[x, y] == InArray.Zero)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     //前の情報を入れる
     public void PreviousArray()
     {
         previousArrays = inArrays;
-    }
-    //前の情報を入れたら現在の情報に入れる
-    public void CurrentArray()
-    {
-        //inArrays = previousArrays;
     }
 
     public void OutOfOil(int ax, int ay, int w, int h)
@@ -126,7 +148,6 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
-
     //オイルの外かどうか
     public bool OutOfOilChack(int x, int y, int w, int h, Vector3 p)
     {
@@ -137,35 +158,7 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-    public Vector3 MapOn(Vector3 p)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                if (p == worldPos[x, y])
-                {
-                    return worldPos[x, y];
-                }
-                //Debug.Log(worldPos[x, y]);
-            }
-        }
-        return p;
-    }
-
-    public bool UnderMap(Vector3 p)//下にいるときブロックが留まる
-    {
-        for (int x = 0; x < width; x++)
-        {
-            if (p == worldPos[x, 1])
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void FixedBlock(Vector3 p)
+    public void DownFixedBlock(Vector3 p)
     {
         for (int x = 0; x < width; ++x)
         {
@@ -173,7 +166,7 @@ public class GamePlayManager : MonoBehaviour
             {
                 if (p == worldPos[x, y])
                 {
-                    inArrays[(int)p.x, (int)p.y] = InArray.FixedBlock;
+                    inArrays[(int)p.x, (int)p.y] = InArray.DownFixedBlock;
                 }
             }
         }
@@ -187,7 +180,14 @@ public class GamePlayManager : MonoBehaviour
             {
                 if (p == worldPos[x, y])
                 {
-                    inArrays[(int)p.x, (int)p.y] = InArray.UpFixedBlock;
+                    if (inArrays[x, y] == InArray.Zero)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        inArrays[(int)p.x, (int)p.y] = InArray.UpFixedBlock;
+                    }
                 }
             }
         }
@@ -234,7 +234,7 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return true;
                             }
-                            else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
+                            else if (inArrays[nx, y] == InArray.DownFixedBlock)//すでに固定された
                             {
                                 return true;
                             }
@@ -243,7 +243,7 @@ public class GamePlayManager : MonoBehaviour
                 }
             }
         }
-        //上 下にオイル外ないからいいや
+        //上 
         else if (dy > 0 && dx == 0)
         {
             for (int y = ny; y < height; y++)
@@ -255,27 +255,24 @@ public class GamePlayManager : MonoBehaviour
                     {
                         if (next == worldPos[xb, yb])
                         {
+                            //一個でも上にブロックがあればいけない
                             if (inArrays[nx, y] == InArray.Space)
                             {
                                 return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.OutOfOil)
-                            {
-                                return true;
-                            }
-                            else if (inArrays[nx, y] == InArray.FixedBlock)//すでに固定された
-                            {
-                                return true;
                             }
                             else if (inArrays[nx, y] == InArray.UpFixedBlock)
                             {
                                 return true;
                             }
-                            else if (inArrays[nx, y] == InArray.UpWall)
+                            else if (inArrays[nx, y] == InArray.DownFixedBlock)//すでに固定された
                             {
                                 return true;
                             }
-                            else if (inArrays[nx, y] == InArray.T_Wall)
+                            else if (inArrays[nx, y] == InArray.OutOfOil)
+                            {
+                                return true;
+                            }
+                            else if (inArrays[nx, y] == InArray.UpWall)
                             {
                                 return true;
                             }
@@ -316,7 +313,7 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return false;
                             }
-                            else if (inArrays[x, ny] == InArray.FixedBlock)
+                            else if (inArrays[x, ny] == InArray.DownFixedBlock)
                             {
                                 return false;
                             }
@@ -345,7 +342,7 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return false;
                             }
-                            else if (inArrays[x, ny] == InArray.FixedBlock)
+                            else if (inArrays[x, ny] == InArray.DownFixedBlock)
                             {
                                 return false;
                             }
@@ -377,13 +374,9 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return false;
                             }
-                            else if (inArrays[nx, y] == InArray.FixedBlock)
+                            else if (inArrays[nx, y] == InArray.DownFixedBlock)
                             {
                                 return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.UpFixedBlock)
-                            {
-                                return true;
                             }
                         }
                     }
@@ -403,37 +396,29 @@ public class GamePlayManager : MonoBehaviour
                         if (next == worldPos[xb, yb])
                         {
                             //ここまで気にすんな
+                            //spaceがあった場合動ける
                             if (inArrays[nx, y] == InArray.Space)
                             {
                                 return true;
-                            }
-                            else if (inArrays[nx, y] == InArray.OutOfOil)
-                            {
-                                if (inArrays[(int)p.x, (int)p.y] == InArray.Zero)
-                                {
-                                    return false;
-                                }
-                                //とりあえずどっちも
-                                return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.Wall)
-                            {
-                                return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.FixedBlock)
-                            {
-                                return false;
                             }
                             //Mapの上に固定されたブロックがある場合
                             else if (inArrays[nx, y] == InArray.UpFixedBlock)
                             {
                                 return false;
                             }
-                            else if (inArrays[nx, y] == InArray.UpWall)
+                            else if (inArrays[nx, y] == InArray.DownFixedBlock)
                             {
                                 return false;
                             }
-                            else if (inArrays[nx, y] == InArray.T_Wall)
+                            else if (inArrays[nx, y] == InArray.OutOfOil)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[nx, y] == InArray.Wall)
+                            {
+                                return false;
+                            }
+                            else if (inArrays[nx, y] == InArray.UpWall)
                             {
                                 return false;
                             }
@@ -446,8 +431,10 @@ public class GamePlayManager : MonoBehaviour
 
         return false;
     }
+    //自分がデス
+
     //次行く場所がオイルなら
-    public bool CheckOid(Vector3 p, Vector3 next)
+    public bool CheckOil(Vector3 p, Vector3 next)
     {
         int nx = (int)next.x;
         int ny = (int)next.y;
@@ -484,155 +471,6 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-    public bool OilOnCheckZero(Vector3 p)
-    {
-        bool b = false;
-        //今だけ  ここの二十for分むし
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                if (p == worldPos[x, y])
-                {
-                    //その一個下
-
-                    if (OutOfOilChack(1, 18, width - 1, height - 1, p))
-                    {
-                        if(inArrays[x, y - 1] == InArray.Zero)
-                        {
-                            b = true;
-                        }
-                        else if(inArrays[x, y - 1] != InArray.Zero)
-                        {
-                            b = false;
-                        }
-                    }
-                }
-            }
-        }
-
-        return b;
-    }
-
-    public bool UnderZero(Vector3 p)
-    {
-        //今だけ  ここの二十for分むし
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                if (p == worldPos[x, y])
-                {
-                    if (inArrays[x, y - 1] == InArray.Zero)
-                    {
-                        return true;
-                    }
-
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public bool CheckAnder(Vector3 p, Vector3 next)
-    {
-        int nx = (int)next.x;
-        int ny = (int)next.y;
-
-        int dx = nx - (int)p.x;
-        int dy = ny - (int)p.y;
-        //下
-        if (dy < 0)
-        {
-            for (int y = ny; y >= 0; y--)
-            {
-                //今だけ
-                for (int xb = 0; xb < width; ++xb)
-                {
-                    for (int yb = 0; yb < height; ++yb)
-                    {
-                        if (next == worldPos[xb, yb])
-                        {
-
-                            if (inArrays[nx, y] == InArray.Space)
-                            {
-                                return true;
-                            }
-                            else if (inArrays[nx, y] == InArray.Wall)
-                            {
-                                return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.FixedBlock)
-                            {
-                                return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.UpFixedBlock)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-    public bool CheckAbove(Vector3 p, Vector3 next)
-    {
-        int nx = (int)next.x;
-        int ny = (int)next.y;
-
-        int dx = nx - (int)p.x;
-        int dy = ny - (int)p.y;
-        //上
-        if (dy > 0)
-        {
-            for (int y = ny; y < height; y++)
-            {
-                //今だけ  ここの二十for分むし
-                for (int xb = 0; xb < width; ++xb)
-                {
-                    for (int yb = 0; yb < height; ++yb)
-                    {
-                        if (next == worldPos[xb, yb])
-                        {
-                            //ここまで気にすんな
-                            if (inArrays[nx, y] == InArray.Space)
-                            {
-                                return true;
-                            }
-                            else if (inArrays[nx, y] == InArray.OutOfOil)
-                            {
-                                return true;
-                            }
-                            else if (inArrays[nx, y] == InArray.Wall)
-                            {
-                                return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.FixedBlock)
-                            {
-                                return true;
-                            }
-                            //Mapの上に固定されたブロックがある場合
-                            else if (inArrays[nx, y] == InArray.UpFixedBlock)
-                            {
-                                return false;
-                            }
-                            else if (inArrays[nx, y] == InArray.UpWall)
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     public void Zero(Vector3 p)
     {
         //今だけ
@@ -646,27 +484,6 @@ public class GamePlayManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    //キューブがあった場合止める
-    public bool isCubeToCubeStop(Vector3 next)
-    {
-        if (inArrays[(int)next.x, (int)next.y] == InArray.Cube)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    //入れた座標のさきが動ける(space)ならGo
-    public bool OnMoveOk(Vector3 p)
-    {
-        if (worldPos[(int)p.x, (int)p.y] == null)
-        {
-            return false;
-        }
-
-        return false;
     }
 
     //入れ替えcube  space
@@ -796,7 +613,7 @@ public class GamePlayManager : MonoBehaviour
                         s += "a";
                         break;
 
-                    case InArray.FixedBlock:
+                    case InArray.DownFixedBlock:
                         s += "x";
                         break;
 
@@ -814,10 +631,6 @@ public class GamePlayManager : MonoBehaviour
 
                     case InArray.Zero:
                         s += "p";
-                        break;
-
-                    case InArray.T_Wall:
-                        s += "c";
                         break;
 
                     default:
