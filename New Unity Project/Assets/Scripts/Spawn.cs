@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using System.Linq;
 
 
@@ -19,7 +18,6 @@ public class Spawn : MonoBehaviour
     private int objIndex = 0;
     private int choiceCount;     //オブジェクト選択画面
 
-    // Start is called before the first frame update
     void Awake()
     {
         InstansObject = new List<GameObject>();
@@ -28,23 +26,14 @@ public class Spawn : MonoBehaviour
         turnManager = GameObject.Find("GamePlayManager").GetComponent<TurnManager>();
         for (int i = 0; i < objects.Length; i++)
         {
-            //int rnd = Random.Range(0, objects.Length);
-
-            //randObjects.Add(objects[rnd]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
             randObjects.Add(objects[i]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
-
             //横に生成
             Vector3 v = new Vector3(15, 3 + (3 * i), 0);
-
             GameObject g = Instantiate(randObjects[i], v, Quaternion.identity);
             InstansObject.Add(g);
-            //InstansObject[i].GetComponent<Block>().ChildrenStop();
-
             objIndex += 1;//何個オブジェクトを使えるか
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
         SpawnBlock();
@@ -54,12 +43,8 @@ public class Spawn : MonoBehaviour
     //ブロックの生成
     void SpawnBlock()
     {
-        if (objIndex <= 0)
-        {
-            //もう使えるオブジェクトがなければreturn
-            //Debug.Log("使えるオブジェクトがない");
-            return;
-        }
+        //もう使えるオブジェクトがなければreturn
+        if (objIndex <= 0) return;
 
         //Aボタンを押されてたらpositionを変更
         if (Input.GetKeyDown(KeyCode.A))
@@ -67,12 +52,9 @@ public class Spawn : MonoBehaviour
             //指定制に変更
             int index = choiceCount;
             turnManager.Add(InstansObject[index].GetComponentsInChildren<Transform>());
-            //何を出すかランダムにする
-            //int index = Random.Range(0, InstansObject.Count);
             //  ここから下はべつのところでやったほうがいい気がする
             InstansObject[index].transform.localScale = new Vector3(1, 1, 1);  //大きさを元に戻す
             InstansObject[index].transform.position = transform.position;
-
             //落ちるようにする
             InstansObject[index].GetComponent<Block>().currentState = CurrentState.Down;
 
@@ -97,6 +79,5 @@ public class Spawn : MonoBehaviour
 
         if (choiceCount <= 0) choiceCount = 0;  //0以下にはしない
         if (choiceCount >= InstansObject.Count - 1) choiceCount = InstansObject.Count - 1; //オブジェクトの数を超えない
-        //Debug.Log("今の数字" + choiceCount);
     }
 }
