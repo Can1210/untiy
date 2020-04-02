@@ -77,8 +77,11 @@ public class Spawn : MonoBehaviour
             //  ここから下はべつのところでやったほうがいい気がする
             InstansObject[index].transform.localScale = new Vector3(1, 1, 1);  //大きさを元に戻す
             InstansObject[index].transform.position = transform.position;
-            //InstansObject[index].GetComponent<Block_test>().ChildrenMove(); //動くようにする
-            //InstansObject[index].GetComponent<Block_test>().isStop = false; //ここだけ変えた
+
+            //落ちるようにする
+            InstansObject[index].GetComponent<Block_test>().currentState = CurrentState.Down;
+            InstansObject[index].GetComponent<Block_test>().InCube();
+
             InstansObject.Remove(InstansObject[index]);
             objIndex--;
             gameManager.SetTurnChange();  //ターンを切り替える
