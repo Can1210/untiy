@@ -485,22 +485,6 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
-    //自分の場所にキューブを入れるだけ
-    public void inCube(Vector3 p)
-    {
-        //for分で回す必要めっちゃある
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                if (p == worldPos[x, y])
-                {
-                    inArrays[x, y] = InArray.Cube;
-                }
-            }
-        }
-    }
-
     //入れ替えcube  space
     public void inCubeArray(Vector3 p, Vector3 Previous)
     {
