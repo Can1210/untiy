@@ -74,7 +74,7 @@ public class Spawn : MonoBehaviour
             InstansObject[index].transform.position = transform.position;
 
             //落ちるようにする
-            InstansObject[index].GetComponent<Block_test>().currentState = CurrentState.Down;
+            InstansObject[index].GetComponent<Block>().currentState = CurrentState.Down;
 
             InstansObject.Remove(InstansObject[index]);
             objIndex--;
