@@ -25,7 +25,6 @@ public class Block_test : MonoBehaviour
     //BlockMove_testから移植
     private float time;
     private int currenTime;
-    public bool isStop;
     private bool moveOk;
     private int downSpeed = -1;  //落ちるスピード
     private int upSpeed = 1;
@@ -37,8 +36,6 @@ public class Block_test : MonoBehaviour
     public int turnCount = 1;
     //オイル外に入ったかどうか
     public bool isOilOut = false;
-    //delet
-    public bool isDel = false;
 
     // Start is called before the first frame update
     void Start()
@@ -47,10 +44,9 @@ public class Block_test : MonoBehaviour
 
         childrenMove = transform.GetComponentsInChildren<BlockMove_test>();
 
-        currentState = CurrentState.Down;
+        currentState = CurrentState.None;
 
         //移植
-        isStop = false;
         moveOk = false;
         time = 0;
         currenTime = 0;
@@ -68,6 +64,10 @@ public class Block_test : MonoBehaviour
             moveOk = true;
         }
 
+        if(currentState == CurrentState.None)
+        {
+            return;
+        }
 
         Move();
     }
@@ -96,7 +96,6 @@ public class Block_test : MonoBehaviour
                 }
             }
             currentState = CurrentState.Up;
-            isStop = false;
         }
 
         //上で止まっているときの子供の確認
@@ -107,18 +106,6 @@ public class Block_test : MonoBehaviour
 
             }
         }
-
-        if (isStop && currentState == CurrentState.Up)
-        {
-            currentState = CurrentState.UpStop;
-            return;
-        }
-        else if (isStop && currentState == CurrentState.Down)
-        {
-            currentState = CurrentState.DownStop;
-            return;
-        }
-
 
         if (moveOk)
         {
@@ -164,13 +151,13 @@ public class Block_test : MonoBehaviour
             if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
                 currentState == CurrentState.Down)
             {
-                isStop = true;
+                currentState = CurrentState.DownStop;
             }
             //上がっているとき
             else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
                 currentState == CurrentState.Up)
             {
-                isStop = true;
+                currentState = CurrentState.UpStop;
             }
 
             if (gameManager.CheckOil(childPos[i].position, childPos[i].position + d))
@@ -187,19 +174,12 @@ public class Block_test : MonoBehaviour
         transform.position += d;
     }
 
-    public void ChildrenStop()
+    //最初はキューブを入れる
+    public void InCube()
     {
-        for (int i = 0; i < childrenMove.Length; i++)
+        for (int i = 0; i < childPos.Length; i++)
         {
-            childrenMove[i].isStop = true;
-        }
-    }
-
-    public void ChildrenMove()
-    {
-        for (int i = 0; i < childrenMove.Length; i++)
-        {
-            childrenMove[i].isStop = false;
+            gameManager.inCube(childPos[i].position);
         }
     }
 }

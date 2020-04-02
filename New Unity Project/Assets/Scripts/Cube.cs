@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-
     //enumで上がるターンが来たらターンを減らすだけのスクリプト
     private GamePlayManager gameManager;
 
-    private Block_test blocktest;
+    private Block_test b;
 
     private Vector3 previous;
 
@@ -16,7 +15,7 @@ public class Cube : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        blocktest = GetComponentInParent<Block_test>();       
+        b = GetComponentInParent<Block_test>();       
 
         previous = new Vector3(1,1,0);//ゼロだと都合が悪い
     }
@@ -31,35 +30,34 @@ public class Cube : MonoBehaviour
         //    //Destroy(gameObject);
         //}
 
-        if (blocktest.isStop && blocktest.currentState == CurrentState.Down)
+        if ( b.currentState == CurrentState.DownStop)
         {
             //落ちて止まったら下で止まったブロックにする
             gameManager.DownFixedBlock(transform.position);
         }
-        else if (blocktest.isStop && blocktest.currentState == CurrentState.Up)
+        else if (b.currentState == CurrentState.UpStop)
         {
             //上がったら上で止まったブロックにする
             gameManager.UpFixedBlock(transform.position);
         }
-
         //こっちは普通の
-        else if (!blocktest.isStop &&  blocktest.currentState == CurrentState.Down || blocktest.currentState == CurrentState.Up &&  blocktest.turnCount != 0 && !blocktest.isOilOut)
+        else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up &&  b.turnCount != 0 && !b.isOilOut)
         {
             gameManager.inCubeArray(transform.position, previous);
         }
 
         //オイル外
-        else if (!blocktest.isStop && 
-            blocktest.currentState == CurrentState.Down || blocktest.currentState == CurrentState.Up 
-            && blocktest.turnCount != 0 && blocktest.isOilOut)
+        else if (
+            b.currentState == CurrentState.Down || b.currentState == CurrentState.Up && 
+            b.turnCount != 0 && b.isOilOut)
         {
             gameManager.inOilOutArray(transform.position, previous);
         }
 
         //ここでカウントが0のやつの情報を入れてる
-        else if (!blocktest.isStop && 
-            blocktest.currentState == CurrentState.Down || blocktest.currentState == CurrentState.Up 
-            && blocktest.turnCount  == 0)
+        else if (
+            b.currentState == CurrentState.Down || b.currentState == CurrentState.Up && 
+            b.turnCount  == 0)
         {
             gameManager.inZeroArray(transform.position, previous);
         }

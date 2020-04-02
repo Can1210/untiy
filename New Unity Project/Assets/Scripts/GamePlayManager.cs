@@ -431,7 +431,6 @@ public class GamePlayManager : MonoBehaviour
 
         return false;
     }
-    //自分がデス
 
     //次行く場所がオイルなら
     public bool CheckOil(Vector3 p, Vector3 next)
@@ -486,8 +485,24 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    //自分の場所にキューブを入れるだけ
+    public void inCube(Vector3 p)
+    {
+        //for分で回す必要めっちゃある
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    inArrays[x, y] = InArray.Cube;
+                }
+            }
+        }
+    }
+
     //入れ替えcube  space
-    public Vector3 inCubeArray(Vector3 p, Vector3 Previous)
+    public void inCubeArray(Vector3 p, Vector3 Previous)
     {
         //for分で回す必要めっちゃある
         for (int x = 0; x < width; ++x)
@@ -505,11 +520,9 @@ public class GamePlayManager : MonoBehaviour
                 }
             }
         }
-
-        return p;
     }
 
-    public Vector3 inOilOutArray(Vector3 p, Vector3 Previous)
+    public void inOilOutArray(Vector3 p, Vector3 Previous)
     {
         //for分で回す必要めっちゃある
         for (int x = 0; x < width; ++x)
@@ -537,10 +550,8 @@ public class GamePlayManager : MonoBehaviour
                 }
             }
         }
-
-        return p;
     }
-    public Vector3 inZeroArray(Vector3 p, Vector3 Previous)
+    public void inZeroArray(Vector3 p, Vector3 Previous)
     {
         //for分で回す必要めっちゃある
         for (int x = 0; x < width; ++x)
@@ -558,8 +569,6 @@ public class GamePlayManager : MonoBehaviour
                 }
             }
         }
-
-        return p;
     }
 
     public void inSpaceArray()//とりあえずすべてをspaceの情報にした。
