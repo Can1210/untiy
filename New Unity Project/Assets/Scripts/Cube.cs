@@ -7,7 +7,7 @@ public class Cube : MonoBehaviour
     //enumで上がるターンが来たらターンを減らすだけのスクリプト
     private GamePlayManager gameManager;
 
-    private Block_test b;
+    private Block b;
 
     private Vector3 previous;
 
@@ -15,7 +15,7 @@ public class Cube : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        b = GetComponentInParent<Block_test>();       
+        b = GetComponentInParent<Block>();       
 
         previous = new Vector3(1,1,0);//ゼロだと都合が悪い
     }
