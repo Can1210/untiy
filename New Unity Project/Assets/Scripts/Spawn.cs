@@ -9,16 +9,14 @@ using System.Linq;
 public class Spawn : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] objects;    //登録するオブジェクト
-
+    private GameObject[] objects;     //登録するオブジェクト
+    private TurnChange gameManager;
+    private TurnManager turnManager;  //揚げカウントの管理
     //他から干渉できるようにpublic
     public List<GameObject> InstansObject;
-
     //とりあえず6種類の中から使えるオブジェクトを選ぶランダムで6個
     private List<GameObject> randObjects = new List<GameObject>();
-
     private int objIndex = 0;
-
     private int choiceCount;     //オブジェクト選択画面
 
     // Start is called before the first frame update
@@ -26,7 +24,8 @@ public class Spawn : MonoBehaviour
     {
         InstansObject = new List<GameObject>();
         choiceCount = 0;     //最初は一番上を選択（上から順番に選択される）
-
+        gameManager = GameObject.Find("GamePlayManager").GetComponent<TurnChange>();
+        turnManager = GameObject.Find("GamePlayManager").GetComponent<TurnManager>();
         for (int i = 0; i < objects.Length; i++)
         {
             //int rnd = Random.Range(0, objects.Length);
@@ -70,11 +69,11 @@ public class Spawn : MonoBehaviour
         //Aボタンを押されてたらpositionを変更
         if (Input.GetKeyDown(KeyCode.A))
         {
-            //何を出すかランダムにする
-            //int index = Random.Range(0, InstansObject.Count);
-
             //指定制に変更
             int index = choiceCount;
+            turnManager.Add(InstansObject[index].GetComponentsInChildren<Transform>());
+            //何を出すかランダムにする
+            //int index = Random.Range(0, InstansObject.Count);
             //  ここから下はべつのところでやったほうがいい気がする
             InstansObject[index].transform.localScale = new Vector3(1, 1, 1);  //大きさを元に戻す
             InstansObject[index].transform.position = transform.position;
@@ -84,8 +83,8 @@ public class Spawn : MonoBehaviour
             InstansObject[index].GetComponent<Block_test>().InCube();
 
             InstansObject.Remove(InstansObject[index]);
-
             objIndex--;
+            gameManager.SetTurnChange();  //ターンを切り替える
         }
     }
     //数字の制御

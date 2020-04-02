@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 //他で参照するからクラスの外に出した。
 public enum CurrentState
@@ -22,12 +23,15 @@ public class Block_test : MonoBehaviour
 
     public Transform[] childPos;
 
+
     //BlockMove_testから移植
     private float time;
     private int currenTime;
     private bool moveOk;
     private int downSpeed = -1;  //落ちるスピード
     private int upSpeed = 1;
+
+    private bool isFry;          //揚げられているか
 
     private Vector3[] previos;
 
@@ -37,10 +41,14 @@ public class Block_test : MonoBehaviour
     //オイル外に入ったかどうか
     public bool isOilOut = false;
 
+    private TurnChange turn;
+    private FryCount[] f;
+
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
+        turn = gameManager.GetComponent<TurnChange>();
 
         childrenMove = transform.GetComponentsInChildren<BlockMove_test>();
 
@@ -50,6 +58,11 @@ public class Block_test : MonoBehaviour
         moveOk = false;
         time = 0;
         currenTime = 0;
+        //フライカウント
+        f = GetComponentsInChildren<FryCount>();
+
+        previos = new Vector3[childPos.Length];
+        isFry = false;    //最初は挙げられていない
     }
 
     // Update is called once per frame
@@ -76,8 +89,8 @@ public class Block_test : MonoBehaviour
     void Move()
     {
         //移動量
-        Vector3 d = Vector3.zero;
-
+        Vector3 d = Vector3.zero;    //毎回0で初期化
+        
         if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop)
         {
             for (int i = 0; i < childPos.Length; i++)
@@ -97,7 +110,6 @@ public class Block_test : MonoBehaviour
             }
             currentState = CurrentState.Up;
         }
-
         //上で止まっているときの子供の確認
         if (currentState == CurrentState.UpStop)
         {
@@ -174,12 +186,38 @@ public class Block_test : MonoBehaviour
         transform.position += d;
     }
 
+<<<<<<< HEAD
     //最初はキューブを入れる
     public void InCube()
+=======
+    //揚げられているかどうかを調べる
+    bool CheckFryCount()
+    {
+        //どれか一つでも0なら上げる
+        for (int i = 0; i < f.Length; i++)
+        {
+            if (f[i].GetFryCount() <= 0)
+                return true;
+        }
+        return false;
+    }
+
+
+    public void ChildrenStop()
+    {
+        for (int i = 0; i < childrenMove.Length; i++)
+        {
+            childrenMove[i].isStop = true;
+        }
+    }
+
+    public void ChildrenMove()
+>>>>>>> 5038e60bb505a23ad40980282067c2b5e5fc1701
     {
         for (int i = 0; i < childPos.Length; i++)
         {
             gameManager.inCube(childPos[i].position);
         }
     }
+
 }
