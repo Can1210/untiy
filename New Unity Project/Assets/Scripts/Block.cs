@@ -11,33 +11,37 @@ public enum CurrentState
     Up,//上に上がる
     UpStop,//上に上がって止める
 
+    DownReSpawn,    //生成しなおして順番を変える
+
     None,
 }
 
 public class Block : MonoBehaviour
 {
-    //神クラス Mapクラス
+    #region GamePlayManager
     private GamePlayManager gameManager;
     private InArray[,] inBlocks;
     private int width;
     private int height;
+    #endregion
 
-    public Transform[] childPos;
-
-    //BlockMove_testから移植
+    #region 処理スピード
     private float time;
     private int currenTime;
     private bool moveOk;
     private int downSpeed = -1;  //落ちるスピード
     private int upSpeed = 1;
+    #endregion
+
+    public Transform[] childPos;
 
     private Vector3[] previos;
 
+    //オイル外に入ったかどうか
+    public bool isOilOut = false;
     public CurrentState currentState;
 
     public int turnCount = 1;
-    //オイル外に入ったかどうか
-    public bool isOilOut = false;
 
     private TurnChange turn;
     private FryCount[] f;
@@ -52,6 +56,7 @@ public class Block : MonoBehaviour
 
         currentState = CurrentState.None;
 
+        //自分のぶろっくの形を覚える
         inBlocks = new InArray[width, height];
         inBlocks = gameManager.inSpaceBlocks(inBlocks);
 
@@ -95,37 +100,21 @@ public class Block : MonoBehaviour
         Vector3 d = Vector3.zero;    //毎回0で初期化
 
         //リザルト中　かつ　止まっている　かつ　フライカウントが0以下の時　上がる
-        //if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop)
-        if (turn.GetTurn() == Turn.Results &&
-            currentState == CurrentState.DownStop &&
-            CheckFryCount())
+
+        if (currentState == CurrentState.DownStop && CheckFryCount())
         {
-            //上に移動し続ける
-            d = new Vector3(0, upSpeed, 0);
-            
-            if (gameManager.NotOnSpace(inBlocks, childPos))
-            {
-                currentState = CurrentState.DownStop;
-            }
-            else
-            {
-                currentState = CurrentState.Up;
-            }
+            currentState = CurrentState.Up;
+        }
 
-            for (int i = 0; i < childPos.Length; i++)
-            {
-                turnCount = childPos[i].transform.GetComponentInChildren<FryCount>().fryCount;
 
-                if (turnCount == 0)
-                {
-                    //カウントが0ならゼロの情報にする
-                    gameManager.Zero(childPos[i].position);
-                }
-                else if (turnCount != 0)
-                {
-                    //キューブに変える
-                    gameManager.NotFixedBlock(childPos[i].position);
-                }
+        for (int i = 0; i < childPos.Length; i++)
+        {
+            //turnCount = childPos[i].transform.GetComponentInChildren<FryCount>().fryCount;
+
+            if (CheckFryCount())
+            {
+                //カウントが0ならゼロの情報にする
+                gameManager.Zero(childPos[i].position);
             }
         }
 
@@ -173,11 +162,7 @@ public class Block : MonoBehaviour
             if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
                 currentState == CurrentState.Down)
             {
-                if (currentState == CurrentState.DownStop) return;  //一回しか呼ばれないようにする
-                
                 currentState = CurrentState.DownStop;
-                turn.SetTurnChange();   //下についたらターンを変える
-
             }
             //上がっているとき
             else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
