@@ -25,10 +25,13 @@ public class Cube : MonoBehaviour
     {
         //毎回描画する奴ら
 
-        //if(gameManager.Death(transform.position))
-        //{
-        //    //Destroy(gameObject);
-        //}
+        if (gameManager.InDeathArea(transform.position))
+        {
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                Destroy(gameObject);
+            }
+        }
 
         if ( b.currentState == CurrentState.DownStop)
         {

@@ -116,6 +116,29 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+
+    //自分が死ぬエリアにあったら
+    public bool InDeathArea(Vector3 p)
+    {
+        for (int y = dySize; y <= dySizeMax; ++y)
+        {
+            for (int x = 0; x < width; ++x)
+            {
+                if (p == worldPos[x, y])
+                {
+                    //デスエリア内にいたら    
+                    if (p.y == y)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+
     //自分の情報を返す
     public InArray SelfState(Vector3 p)
     {
@@ -132,25 +155,6 @@ public class GamePlayManager : MonoBehaviour
             }
         }
         return i;
-    }
-
-    //自分が死ぬエリアにあったら
-    public bool InDeathArea(Vector3 p)
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                if (p == worldPos[x, y])
-                {
-                    if (inArrays[x, y] == InArray.Zero)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     //前の情報を入れる
@@ -529,9 +533,9 @@ public class GamePlayManager : MonoBehaviour
     }
 
     //上がspaceじゃなかったら
-    public bool NotOnSpace(InArray[,] ina , Transform[] t)
+    public bool NotOnSpace(InArray[,] ina, Transform[] t)
     {
-        for(int i = 0;i < t.Length; i++)
+        for (int i = 0; i < t.Length; i++)
         {
             Vector3 p = t[i].position;
             int px = (int)p.x;
@@ -612,7 +616,7 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = 0; y < height; ++y)
             {
-                if(x == worldPos[x,y].x && y == worldPos[x,y].y)
+                if (x == worldPos[x, y].x && y == worldPos[x, y].y)
                 {
                     inBlocks[x, y] = InArray.Space;
                 }
