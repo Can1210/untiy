@@ -722,6 +722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92040c4fe1a992b489c2282ab62dd414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bWidth: 12
+  bHeight: 22
   time: 0
   debugText: {fileID: 712967014}
 --- !u!114 &724958498
@@ -748,8 +750,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a30dddf2b2a9ab545bb8411ad51f8478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nowTurn: 0
   text: {fileID: 897571930}
+  nowTurn: 0
 --- !u!1 &861122516
 GameObject:
   m_ObjectHideFlags: 0

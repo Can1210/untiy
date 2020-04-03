@@ -47,6 +47,8 @@ public class GamePlayManager : MonoBehaviour
     private int dySize = 0;
     private int dySizeMax = 0;
 
+    private List<GameObject> useObjects;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -80,18 +82,26 @@ public class GamePlayManager : MonoBehaviour
 
         time = 0;
         currenTime = 0;
+
+        useObjects = new List<GameObject>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //デスエリア更新
-        deathArea();
+        DeathArea();
 
         arrayDebug();
     }
 
-    public void deathArea()
+    //使われているゲームオブジェクトを登録
+    public void UseObj(GameObject obj)
+    {
+        useObjects.Add(obj);
+    }
+
+    public void DeathArea()
     {
         for (int x = 0; x < width; ++x)
         {

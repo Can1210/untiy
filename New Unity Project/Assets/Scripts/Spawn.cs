@@ -18,12 +18,16 @@ public class Spawn : MonoBehaviour
     private int objIndex = 0;
     private int choiceCount;     //オブジェクト選択画面
 
+    private GamePlayManager playManager;
+
     void Awake()
     {
         InstansObject = new List<GameObject>();
         choiceCount = 0;     //最初は一番上を選択（上から順番に選択される）
         gameManager = GameObject.Find("GamePlayManager").GetComponent<TurnChange>();
         turnManager = GameObject.Find("GamePlayManager").GetComponent<TurnManager>();
+        playManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
+
         for (int i = 0; i < objects.Length; i++)
         {
             randObjects.Add(objects[i]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
@@ -57,6 +61,10 @@ public class Spawn : MonoBehaviour
             InstansObject[index].transform.position = transform.position;
             //落ちるようにする
             InstansObject[index].GetComponent<Block>().currentState = CurrentState.Down;
+            //使っているオブジェクトを格納
+
+            //GamePlayManagerに登録
+            playManager.UseObj(InstansObject[index]);
 
             InstansObject.Remove(InstansObject[index]);
             objIndex--;
