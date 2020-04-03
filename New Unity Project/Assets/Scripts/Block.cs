@@ -31,8 +31,6 @@ public class Block : MonoBehaviour
     private int downSpeed = -1;  //落ちるスピード
     private int upSpeed = 1;
 
-    private bool isFry;          //揚げられているか
-
     private Vector3[] previos;
 
     public CurrentState currentState;
@@ -65,7 +63,6 @@ public class Block : MonoBehaviour
         f = GetComponentsInChildren<FryCount>();
 
         previos = new Vector3[childPos.Length];
-        isFry = false;    //最初は挙げられていない
     }
 
     // Update is called once per frame
@@ -97,12 +94,15 @@ public class Block : MonoBehaviour
         //移動量
         Vector3 d = Vector3.zero;    //毎回0で初期化
 
-        if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop)
+        //リザルト中　かつ　止まっている　かつ　フライカウントが0以下の時　上がる
+        //if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop)
+        if (turn.GetTurn() == Turn.Results &&
+            currentState == CurrentState.DownStop &&
+            CheckFryCount())
         {
             //上に移動し続ける
             d = new Vector3(0, upSpeed, 0);
-
-
+            
             if (gameManager.NotOnSpace(inBlocks, childPos))
             {
                 currentState = CurrentState.DownStop;
@@ -173,7 +173,11 @@ public class Block : MonoBehaviour
             if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
                 currentState == CurrentState.Down)
             {
+                if (currentState == CurrentState.DownStop) return;  //一回しか呼ばれないようにする
+                
                 currentState = CurrentState.DownStop;
+                turn.SetTurnChange();   //下についたらターンを変える
+
             }
             //上がっているとき
             else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
