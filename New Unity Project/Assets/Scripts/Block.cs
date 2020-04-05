@@ -77,6 +77,7 @@ public class Block : MonoBehaviour
         {
             return;
         }
+
         //毎回更新
         InBlocks(childPos);
 
@@ -89,20 +90,31 @@ public class Block : MonoBehaviour
         //移動量
         Vector3 d = Vector3.zero;    //毎回0で初期化
 
-        if(currentState == CurrentState.DownStop && gameManager.NotOnSpace(inBlocks, childPos))
-        {
-            currentState = CurrentState.DownReSpawn;
-        }
+        #region 順序入れ替えが難しいから隠す
+        //ProOrder順序替え
+        //if(currentState == CurrentState.DownStop && gameManager.NotOnSpace(inBlocks, childPos))
+        //{
+        //    currentState = CurrentState.DownReSpawn;
+        //}
 
-        if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop || currentState == CurrentState.Re
-            && !gameManager.NotOnSpace(inBlocks, childPos))
+        //if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop || currentState == CurrentState.Re
+        //    && !gameManager.NotOnSpace(inBlocks, childPos))
+        //{
+        //    currentState = CurrentState.Up;
+        //    if(isIns)
+        //    {
+        //        isIns = false;
+        //    }
+        //}
+        #endregion
+
+        //リザルトだったら
+        if (currentState == CurrentState.DownStop && !gameManager.NotOnSpace(inBlocks, childPos)
+            && gameManager.turn == Turn.Results)
         {
             currentState = CurrentState.Up;
-            if(isIns)
-            {
-                isIns = false;
-            }
         }
+
 
         for (int i = 0; i < childPos.Length; i++)
         {
