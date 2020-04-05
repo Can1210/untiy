@@ -27,12 +27,16 @@ public class TurnManager : MonoBehaviour
         }
     }
     //一斉にカウントを進める
-    public void CountDown()
+    public void CountDown(List<GameObject> list)
     {
-        foreach (var obj in objList)
+        foreach(var l in list)
         {
-            obj.FryCountDown();
+            l.GetComponent<Block>().FryCountDown();
         }
+        //foreach (var obj in objList)
+        //{
+        //    obj.FryCountDown();
+        //}
     }
     //削除
     public void RemoveObj()

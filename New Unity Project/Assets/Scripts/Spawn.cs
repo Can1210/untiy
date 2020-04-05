@@ -51,7 +51,7 @@ public class Spawn : MonoBehaviour
         if (objIndex <= 0) return;
 
         //Aボタンを押されてたらpositionを変更
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && gameManager.nowTurn == Turn.Thinking)
         {
             //指定制に変更
             int index = choiceCount;
@@ -68,7 +68,7 @@ public class Spawn : MonoBehaviour
 
             InstansObject.Remove(InstansObject[index]);
             objIndex--;
-            gameManager.SetTurnChange();  //ターンを切り替える
+            gameManager.ChangeTurn(Turn.PutIn);  //ターンを切り替える
         }
     }
     //数字の制御

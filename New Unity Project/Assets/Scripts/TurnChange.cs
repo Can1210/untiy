@@ -20,12 +20,16 @@ public class TurnChange : MonoBehaviour
     private bool roundEnd;          //1ローテーションの終了
     private TurnManager turnManager;
 
+    private GamePlayManager gameManager;
+
     void Start()
     {
         turnManager = transform.GetComponent<TurnManager>();
         nowTurn = Turn.Thinking;    //最初は考えるターン
         turnChange = false;         //最初はfalse
         roundEnd = false;           //最初はfalse
+
+        gameManager = GetComponent<GamePlayManager>();
     }
 
     void Update()
@@ -38,26 +42,55 @@ public class TurnChange : MonoBehaviour
         switch (nowTurn)
         {
             case Turn.Thinking:               //選ばれたら切り替える
-                roundEnd = false;
-                CheckBool(Turn.PutIn);
                 break;
             case Turn.PutIn:                  //選ばれたら落とす
-                if (turnChange)
+                for(int j = 0;j < gameManager.useObjects.Count;j++)
                 {
-                    turnChange = false;
-                    ChangeTurn(Turn.Results);
-                    turnManager.CountDown();  //カウントを進める
+                    //  一個でも落ちている奴がいれば
+                    if (gameManager.useObjects[j].GetComponent<Block>().currentState == CurrentState.Down)
+                    {
+                        text.text = "現在のターン：" + nowTurn;
+                        return;
+                    }
+                }
+
+                turnManager.CountDown(gameManager.useObjects);
+                int putCount = 0;
+                for(int i = 0;i < gameManager.useObjects.Count;i++)
+                {
+
+                    //一個でもゼロブロックがあるなら
+                    if (gameManager.useObjects[i].GetComponent<Block>().CheckFryCount())
+                    {
+                        ChangeTurn(Turn.Results);
+                    }
+                    else
+                    {
+                        putCount++;
+                    }
+                }
+                //カウントが0のブロックがなかった場合
+                if(putCount == gameManager.useObjects.Count)
+                {
+                    //戻す
+                    ChangeTurn(Turn.Thinking);
                 }
                 break;
-            case Turn.Results:                //上がるのがなければシンキングに戻るようにする
-                //試しでの手動ここは削除されるときに呼ぶ
-                if(Input.GetKeyDown(KeyCode.Z))
+            case Turn.Results:
+                int resCount = 0;
+                for (int i = 0; i < gameManager.useObjects.Count; i++)
                 {
-                    turnChange = true;
-                    roundEnd = true;
+                    //止まっていたら
+                    if (gameManager.useObjects[i].GetComponent<Block>().currentState == CurrentState.UpStop)
+                    {
+                        resCount++;
+                    }
                 }
-                CheckBool(Turn.Thinking);
-                //roundEnd = true;
+                if(resCount == gameManager.useObjects.Count)
+                {
+                    //最初に戻る
+                    ChangeTurn(Turn.Thinking);
+                }
                 break;
             default:
                 break;

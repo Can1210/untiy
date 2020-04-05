@@ -12,6 +12,7 @@ public enum CurrentState
     UpStop,//上に上がって止める
 
     DownReSpawn,    //生成しなおして順番を変える
+    Re, //復活した
 
     None,
 }
@@ -26,9 +27,6 @@ public class Block : MonoBehaviour
     #endregion
 
     #region 処理スピード
-    private float time;
-    private int currenTime;
-    private bool moveOk;
     private int downSpeed = -1;  //落ちるスピード
     private int upSpeed = 1;
     #endregion
@@ -40,6 +38,7 @@ public class Block : MonoBehaviour
     //オイル外に入ったかどうか
     public bool isOilOut = false;
     public CurrentState currentState;
+    public bool isIns;
 
     public int turnCount = 1;
 
@@ -54,16 +53,11 @@ public class Block : MonoBehaviour
         width = gameManager.bWidth;
         height = gameManager.bHeight;
 
-        currentState = CurrentState.None;
-
         //自分のぶろっくの形を覚える
         inBlocks = new InArray[width, height];
         inBlocks = gameManager.inSpaceBlocks(inBlocks);
 
-        //移植
-        moveOk = false;
-        time = 0;
-        currenTime = 0;
+        currentState = CurrentState.None;
         //フライカウント
         f = GetComponentsInChildren<FryCount>();
 
@@ -73,20 +67,16 @@ public class Block : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //                       ↓落ちるスピード
-        time += Time.deltaTime * 3.5f;
-        if (time >= 1)
+        //下で再生成されたとき
+        if (isIns)
         {
-            currenTime += (int)time;
-            time = 0;
-            moveOk = true;
+            currentState = CurrentState.Re;
         }
 
         if (currentState == CurrentState.None)
         {
             return;
         }
-
         //毎回更新
         InBlocks(childPos);
 
@@ -99,18 +89,23 @@ public class Block : MonoBehaviour
         //移動量
         Vector3 d = Vector3.zero;    //毎回0で初期化
 
-        //リザルト中　かつ　止まっている　かつ　フライカウントが0以下の時　上がる
-
-        if (currentState == CurrentState.DownStop && CheckFryCount())
+        if(currentState == CurrentState.DownStop && gameManager.NotOnSpace(inBlocks, childPos))
         {
-            currentState = CurrentState.Up;
+            currentState = CurrentState.DownReSpawn;
         }
 
+        if (Input.GetKeyDown(KeyCode.N) && currentState == CurrentState.DownStop || currentState == CurrentState.Re
+            && !gameManager.NotOnSpace(inBlocks, childPos))
+        {
+            currentState = CurrentState.Up;
+            if(isIns)
+            {
+                isIns = false;
+            }
+        }
 
         for (int i = 0; i < childPos.Length; i++)
         {
-            //turnCount = childPos[i].transform.GetComponentInChildren<FryCount>().fryCount;
-
             if (CheckFryCount())
             {
                 //カウントが0ならゼロの情報にする
@@ -118,7 +113,7 @@ public class Block : MonoBehaviour
             }
         }
 
-        if (moveOk)
+        if (gameManager.moveOk)
         {
             //下に行くなら移動量を下に
             if (currentState == CurrentState.Down)
@@ -132,13 +127,11 @@ public class Block : MonoBehaviour
                 //上に移動し続ける
                 d = new Vector3(0, upSpeed, 0);
             }
-            else if (currentState == CurrentState.DownStop)
+            else if (currentState == CurrentState.DownStop && currentState == CurrentState.UpStop)
             {
                 //とまる
                 d = new Vector3(0, 0, 0);
             }
-
-            moveOk = false;
         }
 
         //ダウンの時だけ移動できる
@@ -186,7 +179,7 @@ public class Block : MonoBehaviour
     }
 
     //揚げられているかどうかを調べる
-    bool CheckFryCount()
+    public bool CheckFryCount()
     {
         //どれか一つでも0なら上げる
         for (int i = 0; i < f.Length; i++)
@@ -197,6 +190,14 @@ public class Block : MonoBehaviour
         return false;
     }
 
+    //生成しなおした際に呼ばれる関数
+    public void InsCube()
+    {
+        for (int i = 0; i < childPos.Length; i++)
+        {
+            childPos[i].GetComponent<Cube>().enabled = true;
+        }
+    }
 
     private void InBlocks(Transform[] t)
     {
@@ -216,6 +217,14 @@ public class Block : MonoBehaviour
             int cy = (int)childPos[i].position.y;
 
             inBlocks[cx, cy] = gameManager.SelfState(childPos[i].position);
+        }
+    }
+    //フライカウントを一個下げる
+    public void FryCountDown()
+    {
+        for(int i = 0;i < childPos.Length;i++)
+        {
+            childPos[i].GetComponentInChildren<FryCount>().FryCountDown();
         }
     }
 }
