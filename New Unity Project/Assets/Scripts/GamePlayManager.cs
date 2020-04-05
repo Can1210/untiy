@@ -33,6 +33,7 @@ public class GamePlayManager : MonoBehaviour
 
     public float time;
     private int currenTime;//時間
+    public bool moveOk;
 
     string s = "";//デバッグ用
     public Text debugText;
@@ -47,7 +48,7 @@ public class GamePlayManager : MonoBehaviour
     private int dySize = 0;
     private int dySizeMax = 0;
 
-    private List<GameObject> useObjects;
+    public List<GameObject> useObjects;
 
     // Start is called before the first frame update
     void Awake()
@@ -82,6 +83,7 @@ public class GamePlayManager : MonoBehaviour
 
         time = 0;
         currenTime = 0;
+        moveOk = false;
 
         useObjects = new List<GameObject>();
     }
@@ -89,10 +91,23 @@ public class GamePlayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        NowTime();
         //デスエリア更新
         DeathArea();
 
         arrayDebug();
+    }
+
+    public void NowTime()
+    {
+        moveOk = false;
+        time += Time.deltaTime * 3.5f;
+        if (time >= 1)
+        {
+            currenTime += (int)time;
+            time = 0;
+            moveOk = true;
+        }
     }
 
     //使われているゲームオブジェクトを登録
@@ -329,6 +344,12 @@ public class GamePlayManager : MonoBehaviour
         int dx = nx - (int)p.x;
         int dy = ny - (int)p.y;
 
+        //移動量がゼロの時
+        if(dx == 0 && dy == 0)
+        {
+            return true;
+        }
+
         //右
         if (dx > 0)
         {
@@ -545,6 +566,7 @@ public class GamePlayManager : MonoBehaviour
     //上がspaceじゃなかったら
     public bool NotOnSpace(InArray[,] ina, Transform[] t)
     {
+
         for (int i = 0; i < t.Length; i++)
         {
             Vector3 p = t[i].position;
