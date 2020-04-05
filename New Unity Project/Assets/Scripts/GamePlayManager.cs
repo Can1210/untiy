@@ -48,7 +48,11 @@ public class GamePlayManager : MonoBehaviour
     private int dySize = 0;
     private int dySizeMax = 0;
 
+    //使われているゲームオブジェクト
     public List<GameObject> useObjects;
+
+    //ターンを登録
+    public Turn turn;
 
     // Start is called before the first frame update
     void Awake()
@@ -108,6 +112,11 @@ public class GamePlayManager : MonoBehaviour
             time = 0;
             moveOk = true;
         }
+    }
+
+    public void Turn(Turn turn)
+    {
+        this.turn = turn;
     }
 
     //使われているゲームオブジェクトを登録
