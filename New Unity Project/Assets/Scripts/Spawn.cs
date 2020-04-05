@@ -76,6 +76,7 @@ public class Spawn : MonoBehaviour
     {
         for (int i = 0; i < InstansObject.Count; i++)
         {
+
             if (i == choiceCount)
                 InstansObject[i].transform.localScale = new Vector3(2, 2, 1);  //選択されている
             else
