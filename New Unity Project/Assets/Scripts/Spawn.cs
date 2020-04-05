@@ -50,7 +50,7 @@ public class Spawn : MonoBehaviour
         //もう使えるオブジェクトがなければreturn
         if (objIndex <= 0) return;
 
-        //Aボタンを押されてたらpositionを変更
+        //Aボタンを押されてたらpositionを変更    Thinking時しか押せない
         if (Input.GetKeyDown(KeyCode.A) && gameManager.nowTurn == Turn.Thinking)
         {
             //指定制に変更

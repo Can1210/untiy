@@ -34,6 +34,7 @@ public class TurnChange : MonoBehaviour
 
     void Update()
     {
+        gameManager.Turn(nowTurn);
         TurnManager();
     }
     //ターンの全体管理
