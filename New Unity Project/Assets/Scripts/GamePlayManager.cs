@@ -31,7 +31,8 @@ public class GamePlayManager : MonoBehaviour
 
     public Vector3[,] worldPos = new Vector3[width, height];
 
-    public float time;
+    public float speed = 2.0f;
+    private float time;
     private int currenTime;//時間
     public bool moveOk;
 
@@ -105,7 +106,7 @@ public class GamePlayManager : MonoBehaviour
     public void NowTime()
     {
         moveOk = false;
-        time += Time.deltaTime * 3.5f;
+        time += Time.deltaTime * speed;
         if (time >= 1)
         {
             currenTime += (int)time;
@@ -354,7 +355,7 @@ public class GamePlayManager : MonoBehaviour
         int dy = ny - (int)p.y;
 
         //移動量がゼロの時
-        if(dx == 0 && dy == 0)
+        if (dx == 0 && dy == 0)
         {
             return true;
         }
@@ -573,10 +574,10 @@ public class GamePlayManager : MonoBehaviour
     }
 
     //上がspaceじゃなかったら
-    public bool NotOnSpace(InArray[,] ina, Transform[] t)
+    public bool NotOnSpace(InArray[,] ina, List<Transform> t)
     {
 
-        for (int i = 0; i < t.Length; i++)
+        for (int i = 0; i < t.Count; i++)
         {
             Vector3 p = t[i].position;
             int px = (int)p.x;
@@ -665,6 +666,16 @@ public class GamePlayManager : MonoBehaviour
         }
 
         return inBlocks;
+    }
+
+    public void SelfSpace(Vector3 p)
+    {
+        inArrays[(int)p.x, (int)p.y] = InArray.Space;
+    }
+    //リストから削除
+    public void ReMoveUseList(GameObject g)
+    {
+        useObjects.Remove(g);
     }
 
     public void WallArray()//壁の情報を付ける

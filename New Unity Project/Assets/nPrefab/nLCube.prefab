@@ -95,14 +95,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aec949a0ae8b9b4bb3d0a92358cc857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  childPos:
+  childen:
   - {fileID: 3703985986534931394}
   - {fileID: 3017130590790055140}
   - {fileID: 4811601965672308653}
   - {fileID: 2242728274093127115}
   currentState: 0
+  isIns: 0
   turnCount: 2
-  isOilOut: 0
 --- !u!1001 &3996152370166110890
 PrefabInstance:
   m_ObjectHideFlags: 0

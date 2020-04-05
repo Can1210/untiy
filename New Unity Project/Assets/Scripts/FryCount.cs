@@ -8,7 +8,7 @@ public class FryCount : MonoBehaviour
 {
     [SerializeField]
     private Text text;      //テキスト
-    private Text childObject;
+    public Text childObject;
     [SerializeField]
     private int fryNum;    //揚げカウント
 

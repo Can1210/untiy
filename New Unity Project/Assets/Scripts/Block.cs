@@ -10,6 +10,7 @@ public enum CurrentState
     DownStop,//落ちてきて止める
     Up,//上に上がる
     UpStop,//上に上がって止める
+    OutOil,//油の外
 
     DownReSpawn,    //生成しなおして順番を変える
     Re, //復活した
@@ -31,12 +32,11 @@ public class Block : MonoBehaviour
     private int upSpeed = 1;
     #endregion
 
-    public Transform[] childPos;
+    public Transform[] childen;
+    private List<Transform> childPos = new List<Transform>();
 
     private Vector3[] previos;
 
-    //オイル外に入ったかどうか
-    public bool isOilOut = false;
     public CurrentState currentState;
     public bool isIns;
 
@@ -61,12 +61,20 @@ public class Block : MonoBehaviour
         //フライカウント
         f = GetComponentsInChildren<FryCount>();
 
-        previos = new Vector3[childPos.Length];
+        childPos = new List<Transform>();
+        for (int i = 0;i < childen.Length;i++)
+        {
+            childPos.Add(childen[i]);
+        }
+
+        previos = new Vector3[childPos.Count];
     }
 
     // Update is called once per frame
     void Update()
     {
+        BlockDestroy();
+
         //下で再生成されたとき
         if (isIns)
         {
@@ -116,10 +124,12 @@ public class Block : MonoBehaviour
         }
 
 
-        for (int i = 0; i < childPos.Length; i++)
+        for (int i = 0; i < childPos.Count; i++)
         {
             if (CheckFryCount())
             {
+                if(childPos[i] == null)
+                { break; }
                 //カウントが0ならゼロの情報にする
                 gameManager.Zero(childPos[i].position);
             }
@@ -161,8 +171,10 @@ public class Block : MonoBehaviour
         }
 
         //子供たちの場所から確認
-        for (int i = 0; i < childPos.Length; i++)
+        for (int i = 0; i < childPos.Count; i++)
         {
+            if (childPos[i] == null) break;
+
             //落ちているとき
             if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
                 currentState == CurrentState.Down)
@@ -178,7 +190,7 @@ public class Block : MonoBehaviour
 
             if (gameManager.CheckOil(childPos[i].position, childPos[i].position + d))
             {
-                isOilOut = true;
+                //currentState = CurrentState.OutOil;
             }
 
             if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + d))
@@ -202,16 +214,36 @@ public class Block : MonoBehaviour
         return false;
     }
 
+    private void BlockDestroy()
+    {
+        int count = childPos.Count;
+        for (int i = 0; i < childPos.Count; i++)
+        {
+            if (childPos[i] == null)
+            {
+                childPos.Remove(childPos[i]);
+                count--;
+            }
+        }
+        if (count <= 0)
+        {
+            //子供が消えたら自分も消す
+            gameManager.ReMoveUseList(gameObject);
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     //生成しなおした際に呼ばれる関数
     public void InsCube()
     {
-        for (int i = 0; i < childPos.Length; i++)
+        for (int i = 0; i < childPos.Count; i++)
         {
             childPos[i].GetComponent<Cube>().enabled = true;
         }
     }
 
-    private void InBlocks(Transform[] t)
+    private void InBlocks(List<Transform> t)
     {
         //いったん真っ白にしてから
         for (int x = 0; x < width; ++x)
@@ -223,8 +255,14 @@ public class Block : MonoBehaviour
         }
 
         //自分の情報を入れる
-        for (int i = 0; i < childPos.Length; i++)
+        for (int i = 0; i < childPos.Count; i++)
         {
+            //nullだったらリターン
+            if(childPos[i] == null)
+            {
+                return;
+            }
+
             int cx = (int)childPos[i].position.x;
             int cy = (int)childPos[i].position.y;
 
@@ -234,7 +272,7 @@ public class Block : MonoBehaviour
     //フライカウントを一個下げる
     public void FryCountDown()
     {
-        for(int i = 0;i < childPos.Length;i++)
+        for (int i = 0; i < childPos.Count; i++)
         {
             childPos[i].GetComponentInChildren<FryCount>().FryCountDown();
         }

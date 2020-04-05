@@ -29,7 +29,11 @@ public class Cube : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.D))
             {
+                //spaceにしてテキストも消して自分のオブジェクトも消す
+                gameManager.SelfSpace(transform.position);
+                Destroy(GetComponentInChildren<FryCount>().childObject);
                 Destroy(gameObject);
+                return;
             }
         }
 
@@ -44,15 +48,13 @@ public class Cube : MonoBehaviour
             gameManager.UpFixedBlock(transform.position);
         }
         //こっちは普通の
-        else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up &&  b.turnCount != 0 && !b.isOilOut)
+        else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up &&  b.turnCount != 0)
         {
             gameManager.inCubeArray(transform.position, previous);
         }
 
-        //オイル外
-        else if (
-            b.currentState == CurrentState.Down || b.currentState == CurrentState.Up && 
-            b.turnCount != 0 && b.isOilOut)
+        //オイル外  カウントが0のやつはいけない
+        else if (b.currentState == CurrentState.OutOil && b.turnCount != 0 )
         {
             gameManager.inOilOutArray(transform.position, previous);
         }
