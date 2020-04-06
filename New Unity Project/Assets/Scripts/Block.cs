@@ -83,7 +83,7 @@ public class Block : MonoBehaviour
             return;
         }
 
-        if(gameManager.turn ==  Turn.Thinking)
+        if(gameManager.turn ==  Turn.Form && !gameManager.InArrayZero())
         {
             currentState = CurrentState.Down;
         }
