@@ -93,20 +93,39 @@ public class TurnChange : MonoBehaviour
                 }
                 if (resCount == gameManager.useObjects.Count)
                 {
-                    //最初に戻る
+                    //
                     ChangeTurn(Turn.Delete);
                 }
                 break;
 
             case Turn.Delete:
+                //ゼロがなかった場合
                 if(!gameManager.InArrayZero())
                 {
+                    for (int i = 0; i < gameManager.useObjects.Count; i++)
+                    {
+                        //落ちろ
+                        gameManager.useObjects[i].GetComponent<Block>().currentState = CurrentState.Down;
+                    }
                     ChangeTurn(Turn.Form);
                 }
                 break;
-
+                //形を判定
             case Turn.Form:
-
+                int forCount = 0;
+                for (int i = 0; i < gameManager.useObjects.Count; i++)
+                {
+                    //止まっていたら
+                    if (gameManager.useObjects[i].GetComponent<Block>().currentState == CurrentState.DownStop)
+                    {
+                        forCount++;
+                    }
+                }
+                if (forCount == gameManager.useObjects.Count)
+                {
+                    //最初に戻る
+                    ChangeTurn(Turn.Thinking);
+                }
                 //もしも形がで来てなかったら      ChangeTurn(Turn.Thinking);
                 //もしも形ができてたら            ChangeTurn(Turn.Clear);
                 break;

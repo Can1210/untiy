@@ -83,11 +83,6 @@ public class Block : MonoBehaviour
             return;
         }
 
-        if(gameManager.turn ==  Turn.Form && !gameManager.InArrayZero())
-        {
-            currentState = CurrentState.Down;
-        }
-
         //毎回更新
         InBlocks(childPos);
 
