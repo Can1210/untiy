@@ -40,8 +40,6 @@ public class Block : MonoBehaviour
     public CurrentState currentState;
     public bool isIns;
 
-    public int turnCount = 1;
-
     private TurnChange turn;
     private FryCount[] f;
 
@@ -49,7 +47,6 @@ public class Block : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        turn = gameManager.GetComponent<TurnChange>();
         width = gameManager.bWidth;
         height = gameManager.bHeight;
 
@@ -76,14 +73,19 @@ public class Block : MonoBehaviour
         BlockDestroy();
 
         //下で再生成されたとき
-        if (isIns)
-        {
-            currentState = CurrentState.Re;
-        }
+        //if (isIns)
+        //{
+        //    currentState = CurrentState.Re;
+        //}
 
         if (currentState == CurrentState.None)
         {
             return;
+        }
+
+        if(gameManager.turn ==  Turn.Thinking)
+        {
+            currentState = CurrentState.Down;
         }
 
         //毎回更新
@@ -122,7 +124,6 @@ public class Block : MonoBehaviour
         {
             currentState = CurrentState.Up;
         }
-
 
         for (int i = 0; i < childPos.Count; i++)
         {

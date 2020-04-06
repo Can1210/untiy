@@ -15,9 +15,9 @@ public class Cube : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
-        b = GetComponentInParent<Block>();       
+        b = GetComponentInParent<Block>();
 
-        previous = new Vector3(1,1,0);//ゼロだと都合が悪い
+        previous = new Vector3(1, 1, 0);//ゼロだと都合が悪い
     }
 
     // Update is called once per frame
@@ -25,19 +25,16 @@ public class Cube : MonoBehaviour
     {
         //毎回描画する奴ら
 
-        if (gameManager.InDeathArea(transform.position))
+        if (gameManager.InDeathArea(transform.position) && gameManager.turn == Turn.Thinking)
         {
-            if(Input.GetKeyDown(KeyCode.D))
-            {
-                //spaceにしてテキストも消して自分のオブジェクトも消す
-                gameManager.SelfSpace(transform.position);
-                Destroy(GetComponentInChildren<FryCount>().childObject);
-                Destroy(gameObject);
-                return;
-            }
+            //spaceにしてテキストも消して自分のオブジェクトも消す
+            gameManager.SelfSpace(transform.position);
+            Destroy(GetComponentInChildren<FryCount>().childObject);
+            Destroy(gameObject);
+            return;
         }
 
-        if ( b.currentState == CurrentState.DownStop)
+        if (b.currentState == CurrentState.DownStop)
         {
             //落ちて止まったら下で止まったブロックにする
             gameManager.DownFixedBlock(transform.position);
@@ -48,24 +45,22 @@ public class Cube : MonoBehaviour
             gameManager.UpFixedBlock(transform.position);
         }
         //こっちは普通の
-        else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up &&  b.turnCount != 0)
+        else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up)
         {
             gameManager.inCubeArray(transform.position, previous);
         }
 
         //オイル外  カウントが0のやつはいけない
-        else if (b.currentState == CurrentState.OutOil && b.turnCount != 0 )
+        else if (b.currentState == CurrentState.OutOil)
         {
             gameManager.inOilOutArray(transform.position, previous);
         }
 
-        //ここでカウントが0のやつの情報を入れてる
-        else if (
-            b.currentState == CurrentState.Down || b.currentState == CurrentState.Up && 
-            b.turnCount  == 0)
-        {
-            gameManager.inZeroArray(transform.position, previous);
-        }
+        ////ここでカウントが0のやつの情報を入れてる
+        //else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up)
+        //{
+        //    gameManager.inZeroArray(transform.position, previous);
+        //}
 
         previous = transform.position;//前のポジション
     }
