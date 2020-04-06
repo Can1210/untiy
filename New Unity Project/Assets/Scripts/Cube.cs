@@ -34,7 +34,7 @@ public class Cube : MonoBehaviour
             return;
         }
 
-        if (b.currentState == CurrentState.DownStop)
+        if (b.currentState == CurrentState.DownStop && gameManager.SelfState(transform.position) != InArray.Zero)
         {
             //落ちて止まったら下で止まったブロックにする
             gameManager.DownFixedBlock(transform.position);
@@ -56,11 +56,11 @@ public class Cube : MonoBehaviour
             gameManager.inOilOutArray(transform.position, previous);
         }
 
-        ////ここでカウントが0のやつの情報を入れてる
-        //else if (b.currentState == CurrentState.Down || b.currentState == CurrentState.Up)
-        //{
-        //    gameManager.inZeroArray(transform.position, previous);
-        //}
+        //ここでカウントが0のやつの情報を入れてる
+        else if (b.currentState == CurrentState.Down && gameManager.SelfState(transform.position) == InArray.Zero)
+        {
+            gameManager.Zero(transform.position);
+        }
 
         previous = transform.position;//前のポジション
     }

@@ -194,7 +194,6 @@ public class Block : MonoBehaviour
                 return;
             }
         }
-
         transform.position += d;
     }
 

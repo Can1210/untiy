@@ -93,7 +93,6 @@ public class TurnChange : MonoBehaviour
                 }
                 if (resCount == gameManager.useObjects.Count)
                 {
-                    //
                     ChangeTurn(Turn.Delete);
                 }
                 break;
