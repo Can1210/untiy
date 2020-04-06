@@ -9,6 +9,10 @@ public enum Turn
     Thinking, //選ぶ状態
     PutIn,    //落とした状態
     Results,  //上に上がった状態
+    Delete, //カウントが0のやつを削除
+    Form,//形を合わせる
+
+    Clear,//クリア
 }
 //ターン切り替えクラス
 public class TurnChange : MonoBehaviour
@@ -45,7 +49,7 @@ public class TurnChange : MonoBehaviour
             case Turn.Thinking:               //選ばれたら切り替える
                 break;
             case Turn.PutIn:                  //選ばれたら落とす
-                for(int j = 0;j < gameManager.useObjects.Count;j++)
+                for (int j = 0; j < gameManager.useObjects.Count; j++)
                 {
                     //  一個でも落ちている奴がいれば
                     if (gameManager.useObjects[j].GetComponent<Block>().currentState == CurrentState.Down)
@@ -57,7 +61,7 @@ public class TurnChange : MonoBehaviour
 
                 turnManager.CountDown(gameManager.useObjects);
                 int putCount = 0;
-                for(int i = 0;i < gameManager.useObjects.Count;i++)
+                for (int i = 0; i < gameManager.useObjects.Count; i++)
                 {
 
                     //一個でもゼロブロックがあるなら
@@ -71,7 +75,7 @@ public class TurnChange : MonoBehaviour
                     }
                 }
                 //カウントが0のブロックがなかった場合
-                if(putCount == gameManager.useObjects.Count)
+                if (putCount == gameManager.useObjects.Count)
                 {
                     //戻す
                     ChangeTurn(Turn.Thinking);
@@ -87,12 +91,30 @@ public class TurnChange : MonoBehaviour
                         resCount++;
                     }
                 }
-                if(resCount == gameManager.useObjects.Count)
+                if (resCount == gameManager.useObjects.Count)
                 {
                     //最初に戻る
-                    ChangeTurn(Turn.Thinking);
+                    ChangeTurn(Turn.Delete);
                 }
                 break;
+
+            case Turn.Delete:
+                if(!gameManager.InArrayZero())
+                {
+                    ChangeTurn(Turn.Form);
+                }
+                break;
+
+            case Turn.Form:
+
+                //もしも形がで来てなかったら      ChangeTurn(Turn.Thinking);
+                //もしも形ができてたら            ChangeTurn(Turn.Clear);
+                break;
+
+            case Turn.Clear:
+                //終了
+                break;
+
             default:
                 break;
         }

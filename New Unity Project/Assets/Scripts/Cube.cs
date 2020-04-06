@@ -25,7 +25,7 @@ public class Cube : MonoBehaviour
     {
         //毎回描画する奴ら
 
-        if (gameManager.InDeathArea(transform.position) && gameManager.turn == Turn.Thinking)
+        if (gameManager.InDeathArea(transform.position) && gameManager.turn == Turn.Delete)
         {
             //spaceにしてテキストも消して自分のオブジェクトも消す
             gameManager.SelfSpace(transform.position);
