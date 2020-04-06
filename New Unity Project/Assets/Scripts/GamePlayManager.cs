@@ -128,6 +128,11 @@ public class GamePlayManager : MonoBehaviour
 
     public void DeathArea()
     {
+        if (turn == global::Turn.Thinking)
+        {
+            dySize = 0;
+            dySizeMax = 0;
+        }
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
@@ -151,6 +156,21 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    //ゼロがあるかどうか
+    public bool InArrayZero()
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (inArrays[x, y] == InArray.Zero)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     //自分が死ぬエリアにあったら
     public bool InDeathArea(Vector3 p)
