@@ -319,6 +319,10 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return true;
                             }
+                            else if(inArrays[nx,y] == InArray.Zero)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -347,7 +351,7 @@ public class GamePlayManager : MonoBehaviour
                             }
                             else if (inArrays[nx, y] == InArray.DownFixedBlock)//すでに固定された
                             {
-                                return true;
+                                return false;
                             }
                             else if (inArrays[nx, y] == InArray.OutOfOil)
                             {
@@ -462,6 +466,10 @@ public class GamePlayManager : MonoBehaviour
                                 return false;
                             }
                             else if (inArrays[nx, y] == InArray.DownFixedBlock)
+                            {
+                                return false;
+                            }
+                            else if(inArrays[nx,y] == InArray.Zero)
                             {
                                 return false;
                             }
@@ -611,6 +619,8 @@ public class GamePlayManager : MonoBehaviour
         }
         return false;
     }
+
+
 
     public void inOilOutArray(Vector3 p, Vector3 Previous)
     {
