@@ -23,6 +23,15 @@ public class Cube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //リセット依頼で追加
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameManager.SelfSpace(transform.position);
+            Destroy(GetComponentInChildren<FryCount>().childObject);
+            Destroy(gameObject);
+        }
+
+
         //毎回描画する奴ら
         if (gameManager.InDeathArea(transform.position) && gameManager.turn == Turn.Delete)
         {

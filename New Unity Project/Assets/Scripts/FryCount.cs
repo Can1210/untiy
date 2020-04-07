@@ -22,6 +22,11 @@ public class FryCount : MonoBehaviour
     
     void Update()
     {
+        //リセット依頼で追加
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Destroy(childObject);
+        }
         if (fryNum <= 0) fryNum = 0;                                 //0以下にはならない
         childObject.text = fryNum.ToString();
         Vector3 a = gameObject.transform.position;

@@ -71,11 +71,21 @@ public class Block : MonoBehaviour
 
         previos = new Vector3[childPos.Count];
     }
+    //リセット依頼で追加
+    private void Death()
+    {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            gameManager.ReMoveUseList(gameObject);
+            Destroy(gameObject);
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
         BlockDestroy();
+        Death();
 
         //下で再生成されたとき
         //if (isIns)

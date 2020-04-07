@@ -38,9 +38,19 @@ public class TurnChange : MonoBehaviour
 
         gameManager = GetComponent<GamePlayManager>();
     }
+    void init()
+    {
+        nowTurn = Turn.Thinking;    //最初は考えるターン
+        turnChange = false;         //最初はfalse
+        roundEnd = false;           //最初はfalse
+    }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            init();
+        }
         gameManager.Turn(nowTurn);
         TurnManager();
     }
@@ -54,6 +64,8 @@ public class TurnChange : MonoBehaviour
             case Turn.PutIn:                  //選ばれたら落とす
                 for (int j = 0; j < gameManager.useObjects.Count; j++)
                 {
+                    //リセット依頼で追加
+                    if (gameManager.useObjects[j] == null) return;
                     //  一個でも落ちている奴がいれば
                     if (gameManager.useObjects[j].GetComponent<Block>().currentState == CurrentState.Down)
                     {
@@ -99,6 +111,8 @@ public class TurnChange : MonoBehaviour
                 }
                 for (int i = 0; i < l.Count; i++)
                 {
+                    //リセット依頼で追加
+                    if (l[i] == null) return;
                     //止まっていたら
                     if (l[i].GetComponent<Block>().currentState == CurrentState.UpStop)
                     {
