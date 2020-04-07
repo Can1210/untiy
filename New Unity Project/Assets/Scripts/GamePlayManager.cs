@@ -765,9 +765,14 @@ public class GamePlayManager : MonoBehaviour
     //下にcかpがあったら ture
     public bool DownReadyOrZero(InArray[,] ins, List<Transform> t)
     {        
+
         for(int c = 0;c < t.Count;c++)
         {
-            if(InInArray(t[c].position))
+            if (t[c] == null)
+            {
+                return false;
+            }
+            if (InInArray(t[c].position))
             {
                 int px = (int)t[c].position.x;
                 int py = (int)t[c].position.y;
