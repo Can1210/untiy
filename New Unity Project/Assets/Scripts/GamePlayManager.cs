@@ -22,7 +22,7 @@ public enum InArray
 
 public class GamePlayManager : MonoBehaviour
 {
-    public static GamePlayManager instance = null;
+    //public static GamePlayManager instance = null;
 
     const int width = 12;
     const int height = 22;
@@ -60,15 +60,15 @@ public class GamePlayManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);  //シーンを切り替えても消えない
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(this.gameObject);  //シーンを切り替えても消えない
+        //}
+        //else
+        //{
+        //    Destroy(this.gameObject);
+        //}
 
         for (int x = 0; x < width; ++x)
         {
