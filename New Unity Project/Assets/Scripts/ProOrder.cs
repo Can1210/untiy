@@ -17,6 +17,8 @@ public class ProOrder : MonoBehaviour
     {
         for(int i = 0;i < gameManager.useObjects.Count; i++)
         {
+            //リセット依頼で追加
+            if (gameManager.useObjects[i] == null) return;
 
             if(gameManager.useObjects[i].GetComponent<Block>().currentState == CurrentState.DownReSpawn)
             {
