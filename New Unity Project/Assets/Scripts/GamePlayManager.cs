@@ -94,42 +94,10 @@ public class GamePlayManager : MonoBehaviour
 
         useObjects = new List<GameObject>();
     }
-    //リセット依頼で追加
-    void init()
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                worldPos[x, y] = new Vector3(x, y, 0);
-            }
-        }
-
-        inSpaceArray();
-        WallArray();
-        wallAndSpaceArrays = inArrays;
-
-        //オイルの外エリアを追加    12,22
-        //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
-        OutOfOil(1, 18, width - 1, height - 1);
-
-        previousArrays = wallAndSpaceArrays;
-
-        time = 0;
-        currenTime = 0;
-        moveOk = false;
-
-        useObjects = new List<GameObject>();
-    }
 
     // Update is called once per frame
     void Update()
     {
-        //リセット依頼で追加
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            init();
-        }
         NowTime();
         //デスエリア更新
         DeathArea();
