@@ -27,6 +27,8 @@ public class TurnChange : MonoBehaviour
 
     private GamePlayManager gameManager;
 
+    private List<GameObject> l = new List<GameObject>();
+
     void Start()
     {
         turnManager = transform.GetComponent<TurnManager>();
@@ -83,21 +85,35 @@ public class TurnChange : MonoBehaviour
                 break;
             case Turn.Results:
                 int resCount = 0;
-                for (int i = 0; i < gameManager.useObjects.Count; i++)
+
+                if (l.Count <= gameManager.useObjects.Count)
+                {
+                    for (int c = 0; c < gameManager.useObjects.Count; c++)
+                    {
+                        if (gameManager.useObjects[c].GetComponent<Block>().currentState == CurrentState.SelfReady ||
+                            gameManager.useObjects[c].GetComponent<Block>().currentState == CurrentState.SelfZero)
+                        {
+                            l.Add(gameManager.useObjects[c]);
+                        }
+                    }
+                }
+                for (int i = 0; i < l.Count; i++)
                 {
                     //止まっていたら
-                    if (gameManager.useObjects[i].GetComponent<Block>().currentState == CurrentState.UpStop)
+                    if (l[i].GetComponent<Block>().currentState == CurrentState.UpStop)
                     {
                         resCount++;
                     }
                 }
-                if (resCount == gameManager.useObjects.Count)
+                if (resCount == l.Count && resCount != 0)
                 {
+                    l = new List<GameObject>();
                     ChangeTurn(Turn.Delete);
                 }
                 break;
 
             case Turn.OutOil:
+                #region O
                 //if (gameManager.InArrayZero())
                 //{
                 //    for (int i = 0; i < gameManager.useObjects.Count; i++)
@@ -110,9 +126,11 @@ public class TurnChange : MonoBehaviour
                 //        }
                 //    }
                 //}
+                #endregion
                 break;
 
             case Turn.Delete:
+                #region D
                 //if (gameManager.InArrayZero())
                 //{
                 //    for (int i = 0; i < gameManager.useObjects.Count; i++)
@@ -123,6 +141,7 @@ public class TurnChange : MonoBehaviour
                 //        }
                 //    }
                 //}
+                #endregion
 
                 //ゼロがなかった場合
                 if (!gameManager.InArrayZero())
