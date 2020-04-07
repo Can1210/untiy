@@ -28,18 +28,6 @@ public class Spawn : MonoBehaviour
         turnManager = GameObject.Find("GamePlayManager").GetComponent<TurnManager>();
         playManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
 
-        init();
-    }
-    //リセット依頼で追加
-    //初期化
-    private void init()
-    {
-        //一度空にする
-        randObjects.Clear();
-        InstansObject.Clear();
-        objIndex = 0;
-        choiceCount = 0;
-
         for (int i = 0; i < objects.Length; i++)
         {
             randObjects.Add(objects[i]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
@@ -50,16 +38,8 @@ public class Spawn : MonoBehaviour
             objIndex += 1;//何個オブジェクトを使えるか
         }
     }
-
-
     void Update()
     {
-        //Rで生成//リセット依頼で追加
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            init();
-        }
-
         SpawnBlock();
         CountMove();
     }
