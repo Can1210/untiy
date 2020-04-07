@@ -9,6 +9,7 @@ public enum Turn
     Thinking, //選ぶ状態
     PutIn,    //落とした状態
     Results,  //上に上がった状態
+    OutOil, //油の外
     Delete, //カウントが0のやつを削除
     Form,//形を合わせる
 
@@ -63,7 +64,6 @@ public class TurnChange : MonoBehaviour
                 int putCount = 0;
                 for (int i = 0; i < gameManager.useObjects.Count; i++)
                 {
-
                     //一個でもゼロブロックがあるなら
                     if (gameManager.useObjects[i].GetComponent<Block>().CheckFryCount())
                     {
@@ -97,19 +97,44 @@ public class TurnChange : MonoBehaviour
                 }
                 break;
 
+            case Turn.OutOil:
+                //if (gameManager.InArrayZero())
+                //{
+                //    for (int i = 0; i < gameManager.useObjects.Count; i++)
+                //    {
+                //        if (gameManager.useObjects[i].GetComponent<Block>().DownZeroBlock() &&
+                //            !gameManager.useObjects[i].GetComponent<Block>().CheckFryCount())
+                //        {
+                //            Debug.Log(gameManager.useObjects[i].name);
+                //            gameManager.useObjects[i].GetComponent<Block>().PositionUp();
+                //        }
+                //    }
+                //}
+                break;
+
             case Turn.Delete:
+                //if (gameManager.InArrayZero())
+                //{
+                //    for (int i = 0; i < gameManager.useObjects.Count; i++)
+                //    {
+                //        if (gameManager.useObjects[i].GetComponent<Block>().DownZeroBlock())
+                //        {
+                //            gameManager.useObjects[i].GetComponent<Block>().PositionUp();
+                //        }
+                //    }
+                //}
+
                 //ゼロがなかった場合
-                if(!gameManager.InArrayZero())
+                if (!gameManager.InArrayZero())
                 {
                     for (int i = 0; i < gameManager.useObjects.Count; i++)
                     {
-                        //落ちろ
                         gameManager.useObjects[i].GetComponent<Block>().currentState = CurrentState.Down;
                     }
                     ChangeTurn(Turn.Form);
                 }
                 break;
-                //形を判定
+            //形を判定
             case Turn.Form:
                 int forCount = 0;
                 for (int i = 0; i < gameManager.useObjects.Count; i++)

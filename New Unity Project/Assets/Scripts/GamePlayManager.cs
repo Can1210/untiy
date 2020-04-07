@@ -15,6 +15,8 @@ public enum InArray
     UpFixedBlock,
     Zero,
 
+    Ready, //準備中
+
     None,
 }
 
@@ -319,7 +321,7 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return true;
                             }
-                            else if(inArrays[nx,y] == InArray.Zero)
+                            else if (inArrays[nx, y] == InArray.Zero)
                             {
                                 return true;
                             }
@@ -351,7 +353,7 @@ public class GamePlayManager : MonoBehaviour
                             }
                             else if (inArrays[nx, y] == InArray.DownFixedBlock)//すでに固定された
                             {
-                                return false;
+                                return true;
                             }
                             else if (inArrays[nx, y] == InArray.OutOfOil)
                             {
@@ -469,7 +471,7 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return false;
                             }
-                            else if(inArrays[nx,y] == InArray.Zero)
+                            else if (inArrays[nx, y] == InArray.Zero)
                             {
                                 return false;
                             }
@@ -565,7 +567,7 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-    public void Zero(Vector3 p)
+    public void SelfZero(Vector3 p)
     {
         //今だけ
         for (int x = 0; x < width; ++x)
@@ -620,7 +622,34 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
+    public bool DownZeroBlock(InArray[,] ina, List<Transform> t)
+    {
 
+        for (int i = 0; i < t.Count; i++)
+        {
+            Vector3 p = t[i].position;
+            int px = (int)p.x;
+            int py = (int)p.y;
+
+            if (inArrays[px, py - 1] == InArray.Zero && ina[px, py - 1] == InArray.Space)
+            {                //Zeroブロックがあった場合
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool DownZeroBlockChild(InArray[,] ina, Vector3 p)
+    {
+        int px = (int)p.x;
+        int py = (int)p.y;
+
+        if (inArrays[px, py - 1] == InArray.Zero && ina[px, py - 1] == InArray.Space)
+        {                //Zeroブロックがあった場合
+            return true;
+        }
+        return false;
+    }
 
     public void inOilOutArray(Vector3 p, Vector3 Previous)
     {
@@ -671,6 +700,26 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    public void inReadyArray(Vector3 p, Vector3 Previous)
+    {
+        //for分で回す必要めっちゃある
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    inArrays[x, y] = InArray.Ready;
+                }
+
+                if (Previous != p && Previous == worldPos[x, y])
+                {
+                    inArrays[x, y] = InArray.Space;
+                }
+            }
+        }
+    }
+
     public void inSpaceArray()//とりあえずすべてをspaceの情報にした。
     {
         for (int x = 0; x < width; ++x)
@@ -696,6 +745,47 @@ public class GamePlayManager : MonoBehaviour
         }
 
         return inBlocks;
+    }
+
+    public bool InInArray(Vector3 p)
+    {
+        int px = (int)p.x;
+        int py = (int)p.y;
+
+        //配列ないかどうか　入れたpositionが
+        //x 0以上か    widthよりしたか y 0以上か heightよりしたか
+        if(px >= 0 && px < width && py >= 0 && py < height)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    //下にcかpがあったら ture
+    public bool DownReadyOrZero(InArray[,] ins, List<Transform> t)
+    {        
+        for(int c = 0;c < t.Count;c++)
+        {
+            if(InInArray(t[c].position))
+            {
+                int px = (int)t[c].position.x;
+                int py = (int)t[c].position.y;
+
+                if(inArrays[px,py - 1] == InArray.Ready ||
+                   inArrays[px, py - 1] == InArray.Zero && 
+                   ins[px,py - 1] == InArray.Space)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    //自分をcにする
+    public void SelfReady(Vector3 p)
+    {
+        inArrays[(int)p.x, (int)p.y] = InArray.Ready;
     }
 
     public void SelfSpace(Vector3 p)
@@ -766,6 +856,10 @@ public class GamePlayManager : MonoBehaviour
 
                     case InArray.Zero:
                         s += "p";
+                        break;
+
+                    case InArray.Ready:
+                        s += "c";
                         break;
 
                     default:
