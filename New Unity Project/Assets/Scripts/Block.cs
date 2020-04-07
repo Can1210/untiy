@@ -12,6 +12,11 @@ public enum CurrentState
     UpStop,//上に上がって止める
     OutOil,//油の外
 
+    Ready,//準備
+
+    SelfZero,   //自分がゼロ(UP)
+    SelfReady,  //自分がゼロじゃない(UP)
+
     DownReSpawn,    //生成しなおして順番を変える
     Re, //復活した
 
@@ -59,7 +64,7 @@ public class Block : MonoBehaviour
         f = GetComponentsInChildren<FryCount>();
 
         childPos = new List<Transform>();
-        for (int i = 0;i < childen.Length;i++)
+        for (int i = 0; i < childen.Length; i++)
         {
             childPos.Add(childen[i]);
         }
@@ -113,21 +118,39 @@ public class Block : MonoBehaviour
         //}
         #endregion
 
-        //リザルトだったら
-        if (currentState == CurrentState.DownStop && !gameManager.NotOnSpace(inBlocks, childPos)
-            && gameManager.turn == Turn.Results)
+        //とりあえずcにする
+        //下で止まっているとき　自分がゼロじゃなく  下にゼロかCがあったら cにする  リザルトの時
+        if (currentState == CurrentState.DownStop && !CheckFryCount() && gameManager.DownReadyOrZero(inBlocks, childPos) 
+            && gameManager.turn == Turn.Results )
         {
-            currentState = CurrentState.Up;
+            for (int i = 0; i < childPos.Count; i++)
+            {
+                gameManager.SelfReady(childPos[i].position);
+            }
+            currentState = CurrentState.Ready;
+        }
+        //下で止まっているとき　自分がゼロだったら  zeroにする リザルトの時
+        else if (currentState == CurrentState.DownStop && CheckFryCount() 
+             && gameManager.turn == Turn.Results )
+        {
+            for (int i = 0; i < childPos.Count; i++)
+            {
+                gameManager.SelfZero(childPos[i].position);
+            }
+            currentState = CurrentState.Ready;
         }
 
-        for (int i = 0; i < childPos.Count; i++)
+        //リザルトだったら  //上にspaceがあったら
+        if (currentState == CurrentState.Ready && !gameManager.NotOnSpace(inBlocks, childPos)
+            && gameManager.turn == Turn.Results)//自分が
         {
-            if (CheckFryCount())
+            if (!CheckFryCount())
             {
-                if(childPos[i] == null)
-                { break; }
-                //カウントが0ならゼロの情報にする
-                gameManager.Zero(childPos[i].position);
+                currentState = CurrentState.SelfReady;
+            }
+            else if (CheckFryCount())
+            {
+                currentState = CurrentState.SelfZero;
             }
         }
 
@@ -140,7 +163,7 @@ public class Block : MonoBehaviour
                 d = new Vector3(0, downSpeed, 0);
             }
             //
-            else if (currentState == CurrentState.Up)
+            else if (currentState == CurrentState.SelfZero || currentState == CurrentState.SelfReady)
             {
                 //上に移動し続ける
                 d = new Vector3(0, upSpeed, 0);
@@ -177,9 +200,15 @@ public class Block : MonoBehaviour
             {
                 currentState = CurrentState.DownStop;
             }
-            //上がっているとき
+            //上がっているとき  数字１以上ブロック 　上に来たら止める
+            else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d)  &&
+                currentState == CurrentState.SelfReady)
+            {
+                currentState = CurrentState.UpStop;
+            }
+            //上がっているとき  数字0ブロック 　上に来たら止める
             else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
-                currentState == CurrentState.Up)
+                currentState == CurrentState.SelfZero)
             {
                 currentState = CurrentState.UpStop;
             }
@@ -253,7 +282,7 @@ public class Block : MonoBehaviour
         for (int i = 0; i < childPos.Count; i++)
         {
             //nullだったらリターン
-            if(childPos[i] == null)
+            if (childPos[i] == null)
             {
                 return;
             }
@@ -271,5 +300,31 @@ public class Block : MonoBehaviour
         {
             childPos[i].GetComponentInChildren<FryCount>().FryCountDown();
         }
+    }
+
+    //下にゼロが無かったら
+    public bool DownZeroBlock()
+    {
+        if (gameManager.DownZeroBlock(inBlocks, childPos))
+        {
+            return true;
+        }
+        return false;
+    }
+    //一個だけ上にあげる
+    public void PositionUp()
+    {
+        int y = 0;
+        for (int i = 0; i < childPos.Count; i++)
+        {
+            if (gameManager.DownZeroBlockChild(inBlocks, childPos[i].position))
+            {
+                if ((int)childPos[i].position.y > y)
+                {
+                    y = (int)childPos[i].position.y + 1;
+                }
+            }
+        }
+        transform.position = new Vector3(transform.position.x, y, 0);
     }
 }

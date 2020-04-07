@@ -24,7 +24,6 @@ public class Cube : MonoBehaviour
     void Update()
     {
         //毎回描画する奴ら
-
         if (gameManager.InDeathArea(transform.position) && gameManager.turn == Turn.Delete)
         {
             //spaceにしてテキストも消して自分のオブジェクトも消す
@@ -57,9 +56,13 @@ public class Cube : MonoBehaviour
         }
 
         //ここでカウントが0のやつの情報を入れてる
-        else if (b.currentState == CurrentState.Down && gameManager.SelfState(transform.position) == InArray.Zero)
+        else if (b.currentState == CurrentState.SelfZero )//&& gameManager.SelfState(transform.position) == InArray.Zero)
         {
-            gameManager.Zero(transform.position);
+            gameManager.inZeroArray(transform.position,previous);
+        }
+        else if(b.currentState == CurrentState.SelfReady)
+        {
+            gameManager.inReadyArray(transform.position,previous);
         }
 
         previous = transform.position;//前のポジション
