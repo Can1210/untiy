@@ -54,7 +54,6 @@ MonoBehaviour:
   - {fileID: 6434078110539622603}
   currentState: 0
   isIns: 0
-  turnCount: 1
 --- !u!114 &7083633151548138110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,11 +109,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -170,12 +164,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: text
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -202,11 +206,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test (3)
-      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -262,12 +261,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test (3)
+      objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: text
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -294,11 +303,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test
-      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -354,12 +358,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test
+      objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: text
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -386,11 +400,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -446,12 +455,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: text
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
