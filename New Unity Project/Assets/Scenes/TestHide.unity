@@ -222,6 +222,7 @@ MonoBehaviour:
   - {fileID: 8661336246331929327, guid: 57d263b79a9293b4f94989c3bc340b53, type: 3}
   - {fileID: 1958961347092176030, guid: 6e19f5ddd8aa29e43859fb217ab8f5e4, type: 3}
   InstansObject: []
+  showNum: 3
 --- !u!4 &37351950
 Transform:
   m_ObjectHideFlags: 0

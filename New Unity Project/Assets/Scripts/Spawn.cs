@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 
-//指定されたものを落とすスポーンクラス
+//テトリスのようにする
 public class Spawn : MonoBehaviour
 {
     [SerializeField]
@@ -15,9 +15,9 @@ public class Spawn : MonoBehaviour
     public List<GameObject> InstansObject;
     //とりあえず6種類の中から使えるオブジェクトを選ぶランダムで6個
     private List<GameObject> randObjects = new List<GameObject>();
-    private int objIndex = 0;
-    private int choiceCount;     //オブジェクト選択画面
-
+    private int choiceCount;     //選択制の廃止によりこれはずっと0
+    [SerializeField]
+    private int showNum;         //待機オブジェクトを見せる数
     private GamePlayManager playManager;
 
     void Awake()
@@ -28,14 +28,15 @@ public class Spawn : MonoBehaviour
         turnManager = GameObject.Find("GamePlayManager").GetComponent<TurnManager>();
         playManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
 
-        for (int i = 0; i < objects.Length; i++)
+        for (int i = 0; i < showNum; i++)
         {
-            randObjects.Add(objects[i]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
+            //ランダムで生成
+            int rndObj = Random.Range(0, objects.Length);   //ランダムで選ぶ
+            randObjects.Add(objects[rndObj]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
             //横に生成
-            Vector3 v = new Vector3(15, 3 + (3 * i), 0);
+            Vector3 v = new Vector3(15, 18 - (3 * i), 0);    //上から順に生成
             GameObject g = Instantiate(randObjects[i], v, Quaternion.identity);
             InstansObject.Add(g);
-            objIndex += 1;//何個オブジェクトを使えるか
         }
     }
     void Update()
@@ -47,8 +48,6 @@ public class Spawn : MonoBehaviour
     //ブロックの生成
     void SpawnBlock()
     {
-        //もう使えるオブジェクトがなければreturn
-        if (objIndex <= 0) return;
 
         //Aボタンを押されてたらpositionを変更    Thinking時しか押せない
         if (Input.GetKeyDown(KeyCode.A) && gameManager.nowTurn == Turn.Thinking)
@@ -65,12 +64,31 @@ public class Spawn : MonoBehaviour
 
             //GamePlayManagerに登録
             playManager.UseObj(InstansObject[index]);
-
             InstansObject.Remove(InstansObject[index]);
-            objIndex--;
             gameManager.ChangeTurn(Turn.PutIn);  //ターンを切り替える
+
+            
+            //一個追加
+            int rndObj = Random.Range(0, objects.Length);   //ランダムで選ぶ
+            randObjects.Add(objects[rndObj]);//こいつは何のオブジェクトが選ばれたか、わかるforぶんで出せばね
+            //横に生成
+            Vector3 v = new Vector3(15, (18 - 3), 0);    //上から順に生成
+            int listBack = randObjects.Count()-1;
+            GameObject g = Instantiate(randObjects[listBack], v, Quaternion.identity);
+            InstansObject.Add(g);
+            Alignment();   //整列する
         }
     }
+    //整列
+    void Alignment()
+    {
+        
+        for(int i =0; i<showNum;i++)
+        {
+            InstansObject[i].transform.position = new Vector3(15, 18 - (3 * i), 0);  //上から古い順に整列
+        }
+    }
+
     //数字の制御
     void CountMove()
     {
@@ -82,10 +100,7 @@ public class Spawn : MonoBehaviour
             else
                 InstansObject[i].transform.localScale = new Vector3(1, 1, 1);  //選択されていない
         }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow)) choiceCount++;    //上に選択を変更
-        if (Input.GetKeyDown(KeyCode.DownArrow)) choiceCount--;  //下に選択を変更
-
+        
         if (choiceCount <= 0) choiceCount = 0;  //0以下にはしない
         if (choiceCount >= InstansObject.Count - 1) choiceCount = InstansObject.Count - 1; //オブジェクトの数を超えない
     }
