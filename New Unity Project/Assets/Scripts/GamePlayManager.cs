@@ -13,7 +13,8 @@ public enum InArray
     Wall,
     DownFixedBlock,//下で固定されたBlock
     UpFixedBlock,
-    Zero,
+    Zero,//count0
+    Death,//死んだ奴ら
 
     Ready, //準備中
 
@@ -42,14 +43,9 @@ public class GamePlayManager : MonoBehaviour
     public Text debugText;
 
     private InArray[,] inArrays = new InArray[width, height];
-
-    //前の情報を記録するための
-    private InArray[,] previousArrays = new InArray[width, height];
-
+    private InArray[,] previousArrays = new InArray[width, height];    //前の情報を記録するための
     private InArray[,] wallAndSpaceArrays = new InArray[width, height];
-
-    private int dySize = 0;
-    private int dySizeMax = 0;
+    private InArray[,] deathAreaArrays = new InArray[width, height];//デスエリア保管
 
     //使われているゲームオブジェクト
     public List<GameObject> useObjects;
@@ -81,7 +77,6 @@ public class GamePlayManager : MonoBehaviour
         inSpaceArray();
         WallArray();
         wallAndSpaceArrays = inArrays;
-
         //オイルの外エリアを追加    12,22
         //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
         OutOfOil(1, 18, width - 1, height - 1);
@@ -99,8 +94,6 @@ public class GamePlayManager : MonoBehaviour
     void Update()
     {
         NowTime();
-        //デスエリア更新
-        DeathArea();
 
         arrayDebug();
     }
@@ -128,31 +121,85 @@ public class GamePlayManager : MonoBehaviour
         useObjects.Add(obj);
     }
 
-    public void DeathArea()
+    //
+    public bool ZeroAreaArray(Vector3 p)
     {
-        if (turn == global::Turn.Thinking)
+        int px = (int)p.x;
+        int py = (int)p.y;
+        if (InInArray(p))
         {
-            dySize = 0;
-            dySizeMax = 0;
+            for (int x = 0; x < width; x++)
+            {
+                if (inArrays[x, py] == InArray.Zero)
+                {
+                    return true;
+                }
+            }
         }
+        return false;
+    }
+
+    public bool DesthAreaArray(Vector3 p)
+    {
+        int px = (int)p.x;
+        int py = (int)p.y;
+        if (InInArray(p))
+        {
+            if (deathAreaArrays[px, py] == InArray.Death)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    //inArraysにですがあるかどうか
+    public bool IsDesth()
+    {
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
             {
-                if (inArrays[x, y] == InArray.Zero)
+                if (inArrays[x, y] == InArray.Death)
                 {
-                    dySizeMax = y;
+                    return true;
                 }
             }
         }
+        return false;
+    }
 
-        for (int x = width - 1; x >= 0; --x)
+    //送られた座標をデスにする
+    public void AddDeathArea(Vector3 p)
+    {
+        int px = (int)p.x;
+        int py = (int)p.y;
+        if (InInArray(p))
         {
-            for (int y = height - 1; y >= 0; --y)
+            deathAreaArrays[px, py] = InArray.Death;
+        }
+    }
+    //初期化
+    public void DesthAreaSpace()
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
             {
-                if (inArrays[x, y] == InArray.Zero)
+                deathAreaArrays[x, y] = InArray.Space;
+            }
+        }
+    }
+
+    //デスをすぺーすに一括返還
+    public void DesthChangeSpace()
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (inArrays[x, y] == InArray.Death)
                 {
-                    dySize = y;
+                    inArrays[x, y] = InArray.Space;
                 }
             }
         }
@@ -173,28 +220,6 @@ public class GamePlayManager : MonoBehaviour
         }
         return false;
     }
-
-    //自分が死ぬエリアにあったら
-    public bool InDeathArea(Vector3 p)
-    {
-        for (int y = dySize; y <= dySizeMax; ++y)
-        {
-            for (int x = 0; x < width; ++x)
-            {
-                if (p == worldPos[x, y])
-                {
-                    //デスエリア内にいたら    
-                    if (p.y == y)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
 
     //自分の情報を返す
     public InArray SelfState(Vector3 p)
@@ -727,6 +752,7 @@ public class GamePlayManager : MonoBehaviour
             for (int y = 0; y < height; ++y)
             {
                 inArrays[x, y] = InArray.Space;
+                deathAreaArrays[x, y] = InArray.Space;
             }
         }
     }
@@ -748,25 +774,25 @@ public class GamePlayManager : MonoBehaviour
     }
 
     public bool InInArray(Vector3 p)
-    {
-        int px = (int)p.x;
-        int py = (int)p.y;
-
-        //配列ないかどうか　入れたpositionが
-        //x 0以上か    widthよりしたか y 0以上か heightよりしたか
-        if(px >= 0 && px < width && py >= 0 && py < height)
+    {//配列内か
+        for (int x = 0; x < width; ++x)
         {
-            return true;
+            for (int y = 0; y < height; ++y)
+            {
+                if (p == worldPos[x, y])
+                {
+                    return true;
+                }
+            }
         }
-
         return false;
     }
 
     //下にcかpがあったら ture
     public bool DownReadyOrZero(InArray[,] ins, List<Transform> t)
-    {        
+    {
 
-        for(int c = 0;c < t.Count;c++)
+        for (int c = 0; c < t.Count; c++)
         {
             if (t[c] == null)
             {
@@ -777,9 +803,9 @@ public class GamePlayManager : MonoBehaviour
                 int px = (int)t[c].position.x;
                 int py = (int)t[c].position.y;
 
-                if(inArrays[px,py - 1] == InArray.Ready ||
-                   inArrays[px, py - 1] == InArray.Zero && 
-                   ins[px,py - 1] == InArray.Space)
+                if (inArrays[px, py - 1] == InArray.Ready ||
+                   inArrays[px, py - 1] == InArray.Zero &&
+                   ins[px, py - 1] == InArray.Space)
                 {
                     return true;
                 }
@@ -793,6 +819,10 @@ public class GamePlayManager : MonoBehaviour
         inArrays[(int)p.x, (int)p.y] = InArray.Ready;
     }
 
+    public void SelfDeath(Vector3 p)
+    {
+        inArrays[(int)p.x, (int)p.y] = InArray.Death;
+    }
     public void SelfSpace(Vector3 p)
     {
         inArrays[(int)p.x, (int)p.y] = InArray.Space;
@@ -861,6 +891,10 @@ public class GamePlayManager : MonoBehaviour
 
                     case InArray.Zero:
                         s += "p";
+                        break;
+
+                    case InArray.Death:
+                        s += "d";
                         break;
 
                     case InArray.Ready:

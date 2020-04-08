@@ -10,7 +10,8 @@ public enum Turn
     PutIn,    //落とした状態
     Results,  //上に上がった状態
     OutOil, //油の外
-    Delete, //カウントが0のやつを削除
+    Delete, //削除する奴をdにする
+    Deleting,//削除中
     Form,//形を合わせる
 
     Clear,//クリア
@@ -146,6 +147,13 @@ public class TurnChange : MonoBehaviour
                 //ゼロがなかった場合
                 if (!gameManager.InArrayZero())
                 {
+                    ChangeTurn(Turn.Deleting);
+                }
+                break;
+
+            case Turn.Deleting:
+                if(!gameManager.IsDesth())
+                {
                     for (int i = 0; i < gameManager.useObjects.Count; i++)
                     {
                         gameManager.useObjects[i].GetComponent<Block>().currentState = CurrentState.Down;
@@ -153,8 +161,11 @@ public class TurnChange : MonoBehaviour
                     ChangeTurn(Turn.Form);
                 }
                 break;
+
             //形を判定
             case Turn.Form:
+                //デスエリア初期化
+                gameManager.DesthAreaSpace();
                 int forCount = 0;
                 for (int i = 0; i < gameManager.useObjects.Count; i++)
                 {
