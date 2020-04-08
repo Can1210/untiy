@@ -886,12 +886,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objects:
   - {fileID: 1958961347092176030, guid: 6e19f5ddd8aa29e43859fb217ab8f5e4, type: 3}
-  - {fileID: 8022369989177113150, guid: 1a9eedfe5281eb94da06f7b0883f2ec2, type: 3}
+  - {fileID: 8614722116987324392, guid: 6521bfd6217406b40846caff8179e70a, type: 3}
   - {fileID: 4380824471371519658, guid: 97e28b324c97f2d47a5d69915dd59651, type: 3}
   - {fileID: 1783605090618287269, guid: 7c6d1c5a728dc054bba437a55bd5f43c, type: 3}
   - {fileID: 3916610190832298887, guid: c000988a8ea0f93469a8d1d9d82d4e34, type: 3}
   - {fileID: 6366252098706227848, guid: abda84e7ce5efd74aa857c5b047a88d2, type: 3}
   InstansObject: []
+  showNum: 3
 --- !u!4 &910116975
 Transform:
   m_ObjectHideFlags: 0

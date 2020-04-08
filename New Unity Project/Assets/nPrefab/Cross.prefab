@@ -189,6 +189,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -281,6 +286,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -373,6 +383,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -465,6 +480,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -557,6 +577,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1709860635562414044, guid: fbf4f68ed51926146988118767f76243,
         type: 3}
+    - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: fryNum
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

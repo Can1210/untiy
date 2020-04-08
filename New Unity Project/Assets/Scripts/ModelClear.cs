@@ -11,7 +11,7 @@ public class ModelClear : MonoBehaviour
     [SerializeField]
     private int[] x_Model;     //x軸情報
     [SerializeField]
-    private int[] y_Model;     //x軸情報
+    private int[] y_Model;     //y軸情報
 
     const int width = 12;
     const int height = 22;

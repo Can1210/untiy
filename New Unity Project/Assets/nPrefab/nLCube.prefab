@@ -102,7 +102,6 @@ MonoBehaviour:
   - {fileID: 2242728274093127115}
   currentState: 0
   isIns: 0
-  turnCount: 2
 --- !u!1001 &3996152370166110890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: fryNum
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
@@ -276,7 +275,7 @@ PrefabInstance:
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: fryNum
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
@@ -373,7 +372,7 @@ PrefabInstance:
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: fryNum
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
@@ -470,7 +469,7 @@ PrefabInstance:
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: fryNum
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2416836738239794613, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
