@@ -23,20 +23,15 @@ public class Cube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ////毎回描画する奴ら
-        if (gameManager.ZeroAreaArray(transform.position) && gameManager.turn == Turn.Delete)
+        //毎回描画する奴ら
+        //
+        if (gameManager.turn == Turn.Delete)
         {
-            //自分をデスにする
-            gameManager.SelfDeath(transform.position);
-            //デスの場所をgamemanagerに送る
-            gameManager.AddDeathArea(transform.position);
             return;
         }
-
-        //毎回描画する奴ら  自分がデスエリアだったら
-        if (gameManager.DesthAreaArray(transform.position) && gameManager.turn == Turn.Deleting)
+        //自分がデスエリアだったら
+        else if (gameManager.ZeroDeathArea(transform.position) && gameManager.turn == Turn.Deleting)
         {
-            gameManager.SelfSpace(transform.position);
             Destroy(GetComponentInChildren<FryCount>().childObject);
             Destroy(gameObject);
             return;
@@ -47,7 +42,7 @@ public class Cube : MonoBehaviour
             //落ちて止まったら下で止まったブロックにする
             gameManager.DownFixedBlock(transform.position);
         }
-        else if (b.currentState == CurrentState.UpStop)
+        else if (b.currentState == CurrentState.UpStop && !b.CheckFryCount())
         {
             //上がったら上で止まったブロックにする
             gameManager.UpFixedBlock(transform.position);

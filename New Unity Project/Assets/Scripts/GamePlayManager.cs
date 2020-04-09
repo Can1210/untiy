@@ -37,6 +37,7 @@ public class GamePlayManager : MonoBehaviour
     public float speed = 2.0f;
     private float time;
     private int currenTime;//時間
+    [SerializeField]
     public bool moveOk;
 
     string s = "";//デバッグ用
@@ -45,7 +46,6 @@ public class GamePlayManager : MonoBehaviour
     private InArray[,] inArrays = new InArray[width, height];
     private InArray[,] previousArrays = new InArray[width, height];    //前の情報を記録するための
     private InArray[,] wallAndSpaceArrays = new InArray[width, height];
-    private InArray[,] deathAreaArrays = new InArray[width, height];//デスエリア保管
 
     //使われているゲームオブジェクト
     public List<GameObject> useObjects;
@@ -56,15 +56,6 @@ public class GamePlayManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(this.gameObject);  //シーンを切り替えても消えない
-        //}
-        //else
-        //{
-        //    Destroy(this.gameObject);
-        //}
 
         for (int x = 0; x < width; ++x)
         {
@@ -122,7 +113,7 @@ public class GamePlayManager : MonoBehaviour
     }
 
     //
-    public bool ZeroAreaArray(Vector3 p)
+    public bool ZeroDeathArea(Vector3 p)
     {
         int px = (int)p.x;
         int py = (int)p.y;
@@ -130,7 +121,7 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                if (inArrays[x, py] == InArray.Zero)
+                if (inArrays[x, py] == InArray.Zero || inArrays[x,py] == InArray.Death)
                 {
                     return true;
                 }
@@ -139,19 +130,42 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-    public bool DesthAreaArray(Vector3 p)
+    public bool NotZeroAreaArray(Vector3 p)
     {
         int px = (int)p.x;
         int py = (int)p.y;
         if (InInArray(p))
         {
-            if (deathAreaArrays[px, py] == InArray.Death)
+            for (int x = 0; x < width; x++)
             {
-                return true;
+                if (inArrays[x, py] == InArray.UpFixedBlock && inArrays[x, py] == InArray.Cube)
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
+    //自分がゼロじゃなくてspaceでもwallでもない場合   ゼロ以外デスにする
+    public void ZeroOrCube()
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                //自分がゼロじゃなくてspaceでもwallでもない場合
+                if (inArrays[x, y] != InArray.Zero && inArrays[x,y] != InArray.Space && inArrays[x,y] != InArray.Wall)
+                {
+                    if(ZeroDeathArea(worldPos[x, y]))
+                    {
+                        //デスを入れる
+                        inArrays[x, y] = InArray.Death;
+                    }
+                }
+            }
+        }      
+    }
+
     //inArraysにですがあるかどうか
     public bool IsDesth()
     {
@@ -159,7 +173,7 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = 0; y < height; ++y)
             {
-                if (inArrays[x, y] == InArray.Death)
+                if (inArrays[x, y] == InArray.Death || inArrays[x,y] == InArray.Zero)
                 {
                     return true;
                 }
@@ -168,36 +182,14 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-    //送られた座標をデスにする
-    public void AddDeathArea(Vector3 p)
-    {
-        int px = (int)p.x;
-        int py = (int)p.y;
-        if (InInArray(p))
-        {
-            deathAreaArrays[px, py] = InArray.Death;
-        }
-    }
-    //初期化
-    public void DesthAreaSpace()
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                deathAreaArrays[x, y] = InArray.Space;
-            }
-        }
-    }
-
     //デスをすぺーすに一括返還
-    public void DesthChangeSpace()
+    public void ZeroDesthChangeSpace()
     {
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
             {
-                if (inArrays[x, y] == InArray.Death)
+                if (inArrays[x, y] == InArray.Death || inArrays[x,y] == InArray.Zero)
                 {
                     inArrays[x, y] = InArray.Space;
                 }
@@ -205,14 +197,13 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
-    //ゼロがあるかどうか
-    public bool InArrayZero()
+    public bool IsDeath()
     {
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
             {
-                if (inArrays[x, y] == InArray.Zero)
+                if (inArrays[x, y] == InArray.Death || inArrays[x, y] == InArray.Zero)
                 {
                     return true;
                 }
@@ -752,7 +743,6 @@ public class GamePlayManager : MonoBehaviour
             for (int y = 0; y < height; ++y)
             {
                 inArrays[x, y] = InArray.Space;
-                deathAreaArrays[x, y] = InArray.Space;
             }
         }
     }
