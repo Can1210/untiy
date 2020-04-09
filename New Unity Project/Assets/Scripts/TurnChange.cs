@@ -145,27 +145,36 @@ public class TurnChange : MonoBehaviour
                 #endregion
 
                 //ゼロがなかった場合
-                if (!gameManager.InArrayZero())
+                gameManager.ZeroOrCube();
+
+                //if (!gameManager.IsZero())
+                //{
+                //    ChangeTurn(Turn.Deleting);
+                //}
+                if (gameManager.IsDeath())
                 {
                     ChangeTurn(Turn.Deleting);
                 }
                 break;
 
             case Turn.Deleting:
-                if(!gameManager.IsDesth())
+                if (!gameManager.IsDesth())
                 {
+                    
                     for (int i = 0; i < gameManager.useObjects.Count; i++)
                     {
                         gameManager.useObjects[i].GetComponent<Block>().currentState = CurrentState.Down;
                     }
                     ChangeTurn(Turn.Form);
                 }
+                if(gameManager.moveOk)
+                {
+                    gameManager.ZeroDesthChangeSpace();
+                }
                 break;
 
             //形を判定
             case Turn.Form:
-                //デスエリア初期化
-                gameManager.DesthAreaSpace();
                 int forCount = 0;
                 for (int i = 0; i < gameManager.useObjects.Count; i++)
                 {
