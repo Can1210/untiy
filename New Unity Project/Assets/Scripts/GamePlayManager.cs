@@ -841,6 +841,12 @@ public class GamePlayManager : MonoBehaviour
         }
     }
 
+    //外部確認用
+    public InArray[,] GetInArrays()
+    {
+        return inArrays;
+    }
+
     public void arrayDebug()
     {
         //s = "\n";//最初改行
