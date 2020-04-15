@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 
-//テトリスのようにする
+//選択制＋選択リストにランダムに追加されていく
 public class Spawn : MonoBehaviour
 {
     [SerializeField]
@@ -100,6 +100,10 @@ public class Spawn : MonoBehaviour
             else
                 InstansObject[i].transform.localScale = new Vector3(1, 1, 1);  //選択されていない
         }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow)) choiceCount--;
+        if (Input.GetKeyDown(KeyCode.DownArrow)) choiceCount++;
+
         
         if (choiceCount <= 0) choiceCount = 0;  //0以下にはしない
         if (choiceCount >= InstansObject.Count - 1) choiceCount = InstansObject.Count - 1; //オブジェクトの数を超えない
