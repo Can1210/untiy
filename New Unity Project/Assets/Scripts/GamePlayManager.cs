@@ -846,6 +846,26 @@ public class GamePlayManager : MonoBehaviour
     {
         return inArrays;
     }
+    //一番下の消えるブロックのy位置を取得
+    int Sort()
+    {
+        int a = 0;
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (inArrays[x, y] == InArray.Death ||
+                    inArrays[x, y] == InArray.Zero)
+                {
+                    if (a > y)
+                    {
+                        a = y;
+                    }
+                }
+            }
+        }
+        return a;
+    }
 
     public void arrayDebug()
     {

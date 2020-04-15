@@ -22,11 +22,16 @@ public class TurnChange : MonoBehaviour
     [SerializeField]
     private Text text;              //現在のターンのテキスト
     public Turn nowTurn;            //現在のターン
+    [SerializeField]
+    private Text conboText;     //コンボのテキスト
+    private int nowConbo;
+
     private bool turnChange;        //ターンを切り替えるかどうか
     private bool roundEnd;          //1ローテーションの終了
     private TurnManager turnManager;
 
     private GamePlayManager gameManager;
+    private FryModel fryModel;
 
     private List<GameObject> l = new List<GameObject>();
 
@@ -38,10 +43,12 @@ public class TurnChange : MonoBehaviour
         roundEnd = false;           //最初はfalse
 
         gameManager = GetComponent<GamePlayManager>();
+        fryModel = GetComponent<FryModel>();
     }
 
     void Update()
     {
+        conboText.text = "現在のコンボ" + nowConbo;
         gameManager.Turn(nowTurn);
         TurnManager();
     }
@@ -80,6 +87,7 @@ public class TurnChange : MonoBehaviour
                 //カウントが0のブロックがなかった場合
                 if (putCount == gameManager.useObjects.Count)
                 {
+                    nowConbo = 0;//0に戻す
                     //戻す
                     ChangeTurn(Turn.Thinking);
                 }
@@ -144,6 +152,8 @@ public class TurnChange : MonoBehaviour
                 //}
                 #endregion
 
+                
+
                 //ゼロがなかった場合
                 gameManager.ZeroOrCube();
 
@@ -153,6 +163,12 @@ public class TurnChange : MonoBehaviour
                 //}
                 if (gameManager.IsDeath())
                 {
+                    fryModel.ArrayCheck();       //揚げられたモデルを調べる
+                    if (fryModel.GetIsConbo())   //コンボしてたら加算・してなかったら0に戻す
+                        nowConbo++;
+                    else
+                        nowConbo = 0;
+                    fryModel.SetFalseIsConbo();  //コンボを確認したらfalseにする
                     ChangeTurn(Turn.Deleting);
                 }
                 break;
