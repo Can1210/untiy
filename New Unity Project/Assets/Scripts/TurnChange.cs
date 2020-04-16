@@ -31,7 +31,8 @@ public class TurnChange : MonoBehaviour
     private TurnManager turnManager;
 
     private GamePlayManager gameManager;
-    private FryModel fryModel;
+    //private FryModel fryModel;
+    private Conbo conbo;
 
     private List<GameObject> l = new List<GameObject>();
 
@@ -43,7 +44,8 @@ public class TurnChange : MonoBehaviour
         roundEnd = false;           //最初はfalse
 
         gameManager = GetComponent<GamePlayManager>();
-        fryModel = GetComponent<FryModel>();
+        //fryModel = GetComponent<FryModel>();
+        conbo = GetComponent<Conbo>();
     }
 
     void Update()
@@ -163,12 +165,12 @@ public class TurnChange : MonoBehaviour
                 //}
                 if (gameManager.IsDeath())
                 {
-                    fryModel.ArrayCheck();       //揚げられたモデルを調べる
-                    if (fryModel.GetIsConbo())   //コンボしてたら加算・してなかったら0に戻す
+                    conbo.RemoveCubeCount();  //消された数を計算して、スコアに加算
+                    if (conbo.GetIsConbo())   //コンボしてたら加算・してなかったら0に戻す
                         nowConbo++;
                     else
                         nowConbo = 0;
-                    fryModel.SetFalseIsConbo();  //コンボを確認したらfalseにする
+                    conbo.SetFalseIsConbo();  //コンボを確認したらfalseにする
                     ChangeTurn(Turn.Deleting);
                 }
                 break;
