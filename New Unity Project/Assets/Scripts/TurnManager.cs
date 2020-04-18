@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//ターンの管理
+//ターンの管理というかなんかFryCountManagerになっている気がする名前変えた方が絶対委員会
 public class TurnManager : MonoBehaviour
 {
     private List<FryCount> objList;     //生成されたオブジェクトのリスト
@@ -33,14 +33,5 @@ public class TurnManager : MonoBehaviour
         {
             l.GetComponent<Block>().FryCountDown();
         }
-        //foreach (var obj in objList)
-        //{
-        //    obj.FryCountDown();
-        //}
-    }
-    //削除
-    public void RemoveObj()
-    {
-
     }
 }
