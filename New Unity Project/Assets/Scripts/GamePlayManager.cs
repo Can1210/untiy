@@ -23,8 +23,6 @@ public enum InArray
 
 public class GamePlayManager : MonoBehaviour
 {
-    //public static GamePlayManager instance = null;
-
     const int width = 12;
     const int height = 22;
 

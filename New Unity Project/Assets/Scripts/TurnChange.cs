@@ -153,7 +153,6 @@ public class TurnChange : MonoBehaviour
                 //    }
                 //}
                 #endregion
-
                 
 
                 //ゼロがなかった場合
@@ -220,6 +219,8 @@ public class TurnChange : MonoBehaviour
         }
         text.text = "現在のターン：" + nowTurn;
     }
+
+
     //ターン切り替え
     public void ChangeTurn(Turn turn)
     {
@@ -250,8 +251,6 @@ public class TurnChange : MonoBehaviour
     {
         turnChange = true;
     }
-
-    //意味のないコミットを作る
 
 
 }

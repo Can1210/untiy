@@ -42,11 +42,11 @@ public class Block : MonoBehaviour
 
     private Vector3[] previos;
 
-    public CurrentState currentState;
+    public CurrentState currentState;        //現在の自分の情報
     public bool isIns;
 
     private TurnChange turn;
-    private FryCount[] f;
+    private FryCount[] fryCount;
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +61,7 @@ public class Block : MonoBehaviour
 
         currentState = CurrentState.None;
         //フライカウント
-        f = GetComponentsInChildren<FryCount>();
+        fryCount = GetComponentsInChildren<FryCount>();
 
         childPos = new List<Transform>();
         for (int i = 0; i < childen.Length; i++)
@@ -89,7 +89,7 @@ public class Block : MonoBehaviour
         }
 
         //毎回更新
-        InBlocks(childPos);
+        MyBlockDesign(childPos);
 
         Move();
     }
@@ -98,7 +98,7 @@ public class Block : MonoBehaviour
     void Move()
     {
         //移動量
-        Vector3 d = Vector3.zero;    //毎回0で初期化
+        Vector3 velocity = Vector3.zero;    //毎回0で初期化
 
         #region 順序入れ替えが難しいから隠す
         //ProOrder順序替え
@@ -160,32 +160,18 @@ public class Block : MonoBehaviour
             if (currentState == CurrentState.Down)
             {
                 //下に移動し続ける
-                d = new Vector3(0, downSpeed, 0);
+                velocity = new Vector3(0, downSpeed, 0);
             }
             //
             else if (currentState == CurrentState.SelfZero || currentState == CurrentState.SelfReady)
             {
                 //上に移動し続ける
-                d = new Vector3(0, upSpeed, 0);
+                velocity = new Vector3(0, upSpeed, 0);
             }
             else if (currentState == CurrentState.DownStop && currentState == CurrentState.UpStop)
             {
                 //とまる
-                d = new Vector3(0, 0, 0);
-            }
-        }
-
-        //ダウンの時だけ移動できる
-        if (currentState == CurrentState.Down)
-        {
-            //横移動
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                d = new Vector3(-1f, downSpeed, 0);
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                d = new Vector3(1f, downSpeed, 0);
+                velocity = new Vector3(0, 0, 0);
             }
         }
 
@@ -195,44 +181,44 @@ public class Block : MonoBehaviour
             if (childPos[i] == null) break;
 
             //落ちているとき
-            if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
+            if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + velocity) &&
                 currentState == CurrentState.Down)
             {
                 currentState = CurrentState.DownStop;
             }
             //上がっているとき  数字１以上ブロック 　上に来たら止める
-            else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d)  &&
+            else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + velocity)  &&
                 currentState == CurrentState.SelfReady)
             {
                 currentState = CurrentState.UpStop;
             }
             //上がっているとき  数字0ブロック 　上に来たら止める
-            else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + d) &&
+            else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + velocity) &&
                 currentState == CurrentState.SelfZero)
             {
                 currentState = CurrentState.UpStop;
             }
 
-            if (gameManager.CheckOil(childPos[i].position, childPos[i].position + d))
+            if (gameManager.CheckOil(childPos[i].position, childPos[i].position + velocity))
             {
                 //currentState = CurrentState.OutOil;
             }
 
-            if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + d))
+            if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + velocity))
             {
                 return;
             }
         }
-        transform.position += d;
+        transform.position += velocity;
     }
 
     //揚げられているかどうかを調べる
     public bool CheckFryCount()
     {
         //どれか一つでも0なら上げる
-        for (int i = 0; i < f.Length; i++)
+        for (int i = 0; i < fryCount.Length; i++)
         {
-            if (f[i].GetFryCount() <= 0)
+            if (fryCount[i].GetFryCount() <= 0)
                 return true;
         }
         return false;
@@ -267,7 +253,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void InBlocks(List<Transform> t)
+    private void MyBlockDesign(List<Transform> t)
     {
         //いったん真っ白にしてから
         for (int x = 0; x < width; ++x)
@@ -277,15 +263,11 @@ public class Block : MonoBehaviour
                 inBlocks[x, y] = InArray.Space;
             }
         }
-
         //自分の情報を入れる
         for (int i = 0; i < childPos.Count; i++)
         {
             //nullだったらリターン
-            if (childPos[i] == null)
-            {
-                return;
-            }
+            if (childPos[i] == null) return;
 
             int cx = (int)childPos[i].position.x;
             int cy = (int)childPos[i].position.y;
