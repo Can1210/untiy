@@ -584,6 +584,7 @@ public class GamePlayManager : MonoBehaviour
     {
         for (int i = 0; i < t.Count; i++)
         {
+            if (t[i] == null) continue;
             Vector3 p = t[i].position;
             int px = (int)p.x;
             int py = (int)p.y;
