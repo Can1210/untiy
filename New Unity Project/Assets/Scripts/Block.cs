@@ -119,9 +119,8 @@ public class Block : MonoBehaviour
         #endregion
 
         //とりあえずcにする
-        //下で止まっているとき　自分がゼロじゃなく  下にゼロかCがあったら cにする  リザルトの時
-        if (currentState == CurrentState.DownStop && !CheckFryCount() && gameManager.DownReadyOrZero(inBlocks, childPos) 
-            && gameManager.turn == Turn.Results )
+        //下で止まっているとき　自分がゼロじゃなく  下にゼロかCがあったら cにする
+        if (currentState == CurrentState.DownStop && !CheckFryCount() && gameManager.DownReadyOrZero(inBlocks, childPos))
         {
             for (int i = 0; i < childPos.Count; i++)
             {
@@ -130,8 +129,7 @@ public class Block : MonoBehaviour
             currentState = CurrentState.Ready;
         }
         //下で止まっているとき　自分がゼロだったら  zeroにする リザルトの時
-        else if (currentState == CurrentState.DownStop && CheckFryCount() 
-             && gameManager.turn == Turn.Results )
+        else if (currentState == CurrentState.DownStop && CheckFryCount())
         {
             for (int i = 0; i < childPos.Count; i++)
             {
@@ -141,8 +139,7 @@ public class Block : MonoBehaviour
         }
 
         //リザルトだったら  //上にspaceがあったら
-        if (currentState == CurrentState.Ready && !gameManager.NotOnSpace(inBlocks, childPos)
-            && gameManager.turn == Turn.Results)//自分が
+        if (currentState == CurrentState.Ready && !gameManager.NotOnSpace(inBlocks, childPos))//自分が
         {
             if (!CheckFryCount())
             {

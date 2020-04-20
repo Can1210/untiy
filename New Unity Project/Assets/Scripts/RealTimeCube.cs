@@ -9,25 +9,27 @@ public class RealTimeCube : MonoBehaviour
 
     //enumで上がるターンが来たらターンを減らすだけのスクリプト
     private GamePlayManager gameManager;
-    private Block block;
+    private RealTimeBlock block;
     private Vector3 previous;
+    private RealTimeManager timeManager;
 
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>(); //ゲームマネージャーを探して参照
-        block = GetComponentInParent<Block>();                                            //親の持っているBlockクラスを参照
+        timeManager = GameObject.Find("GamePlayManager").GetComponent<RealTimeManager>(); //ゲームマネージャーを探して参照
+        block = GetComponentInParent<RealTimeBlock>();                                    //親の持っているBlockクラスを参照
         previous = new Vector3(1, 1, 0);                                                  //ゼロだと都合が悪い
     }
 
     void Update()
     {
-        BlockStateManager();
+        BlockStateManager();            //Cuveの状態管理
     }
     //親のブロックの状態に応じてこちらを変更していく
     void BlockStateManager()
     {
-        //自分が死亡場所にいるなら消す
-        if(gameManager.ZeroDeathArea(transform.position))
+        //自分が死亡場所にいる かつ　消されるときになったら　消す
+        if(gameManager.ZeroDeathArea(transform.position) && timeManager.GetIsDelete())
         {
             Destroy(GetComponentInChildren<FryCount>().childObject);
             Destroy(gameObject);

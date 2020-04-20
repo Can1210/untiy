@@ -21,18 +21,18 @@ public class Cube : MonoBehaviour
     void Update()
     {
         //毎回描画する奴ら
-        //
-        if (gameManager.turn == Turn.Delete)
-        {
-            return;
-        }
-        //自分がデスエリアだったら
-        else if (gameManager.ZeroDeathArea(transform.position) && gameManager.turn == Turn.Deleting)
-        {
-            Destroy(GetComponentInChildren<FryCount>().childObject);
-            Destroy(gameObject);
-            return;
-        }
+        ////
+        //if (gameManager.turn == Turn.Delete)
+        //{
+        //    return;
+        //}
+        ////自分がデスエリアだったら
+        //else if (gameManager.ZeroDeathArea(transform.position) && gameManager.turn == Turn.Deleting)
+        //{
+        //    Destroy(GetComponentInChildren<FryCount>().childObject);
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
 
         if (block.currentState == CurrentState.DownStop && gameManager.SelfState(transform.position) != InArray.Zero)

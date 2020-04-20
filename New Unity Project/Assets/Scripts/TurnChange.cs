@@ -51,7 +51,7 @@ public class TurnChange : MonoBehaviour
     void Update()
     {
         conboText.text = "現在のコンボ" + nowConbo;
-        gameManager.Turn(nowTurn);
+        //gameManager.Turn(nowTurn);
         TurnManager();
     }
     //ターンの全体管理
@@ -175,7 +175,7 @@ public class TurnChange : MonoBehaviour
                 break;
 
             case Turn.Deleting:
-                if (!gameManager.IsDesth())
+                if (!gameManager.IsDeath())
                 {
                     
                     for (int i = 0; i < gameManager.useObjects.Count; i++)
@@ -206,8 +206,6 @@ public class TurnChange : MonoBehaviour
                     //最初に戻る
                     ChangeTurn(Turn.Thinking);
                 }
-                //もしも形がで来てなかったら      ChangeTurn(Turn.Thinking);
-                //もしも形ができてたら            ChangeTurn(Turn.Clear);
                 break;
 
             case Turn.Clear:

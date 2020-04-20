@@ -31,7 +31,7 @@ public class TurnManager : MonoBehaviour
     {
         foreach(var l in list)
         {
-            l.GetComponent<Block>().FryCountDown();
+            l.GetComponent<RealTimeBlock>().FryCountDown();
         }
     }
 }

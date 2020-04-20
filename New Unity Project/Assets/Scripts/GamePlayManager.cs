@@ -20,19 +20,19 @@ public enum InArray
 
     None,
 }
-
+//ゲームのすべての情報を管理する場所
 public class GamePlayManager : MonoBehaviour
 {
-    const int width = 12;
-    const int height = 22;
+    const int width = 12;            //配列の長さ幅
+    const int height = 22;           //配列の長さ高さ
 
     //blockクラスが参照するため
-    public int bWidth = width;
-    public int bHeight = height;
+    public int bWidth = width;       //配列の各長さが参照できるようにする
+    public int bHeight = height;     //配列の各長さが参照できるようにする
 
-    public Vector3[,] worldPos = new Vector3[width, height];
+    public Vector3[,] worldPos = new Vector3[width, height];        //3D空間を配列計算するための物
 
-    public float speed = 2.0f;
+    public float speed = 2.0f;                                      
     private float time;
     private int currenTime;//時間
     [SerializeField]
@@ -41,20 +41,13 @@ public class GamePlayManager : MonoBehaviour
     string s = "";//デバッグ用
     public Text debugText;
 
-    private InArray[,] inArrays = new InArray[width, height];
-    private InArray[,] previousArrays = new InArray[width, height];    //前の情報を記録するための
-    private InArray[,] wallAndSpaceArrays = new InArray[width, height];
+    private InArray[,] inArrays = new InArray[width, height];          //ゲームの土台の配列
 
     //使われているゲームオブジェクト
     public List<GameObject> useObjects;
-
-    //ターンを登録
-    public Turn turn;
-
-    // Start is called before the first frame update
     void Awake()
     {
-
+        //3D座標を配列に入れる（int）
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
@@ -62,31 +55,29 @@ public class GamePlayManager : MonoBehaviour
                 worldPos[x, y] = new Vector3(x, y, 0);
             }
         }
-
-        inSpaceArray();
-        WallArray();
-        wallAndSpaceArrays = inArrays;
+        //配列のセット
+        inSpaceArray();      //inArraysをスペースで初期化
+        WallArray();         //壁情報をつける
         //オイルの外エリアを追加    12,22
         //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
-        OutOfOil(1, 18, width - 1, height - 1);
+        OutOfOil(1, 18, width - 1, height - 1);     //油の外の情報をつける
 
-        previousArrays = wallAndSpaceArrays;
-
+        
+        //初期化
         time = 0;
         currenTime = 0;
         moveOk = false;
 
         useObjects = new List<GameObject>();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         NowTime();
-
+        OutOfOil(1, 18, width - 1, height - 1);     //油の外の情報をつける
         arrayDebug();
     }
-
+    //動いていいかどうかを時間で制御
     public void NowTime()
     {
         moveOk = false;
@@ -98,19 +89,13 @@ public class GamePlayManager : MonoBehaviour
             moveOk = true;
         }
     }
-
-    public void Turn(Turn turn)
-    {
-        this.turn = turn;
-    }
-
     //使われているゲームオブジェクトを登録
     public void UseObj(GameObject obj)
     {
         useObjects.Add(obj);
     }
 
-    //
+    //自分が死亡エリアにいるかどうかを判断する
     public bool ZeroDeathArea(Vector3 p)
     {
         int px = (int)p.x;
@@ -127,7 +112,7 @@ public class GamePlayManager : MonoBehaviour
         }
         return false;
     }
-
+    
     public bool NotZeroAreaArray(Vector3 p)
     {
         int px = (int)p.x;
@@ -163,24 +148,7 @@ public class GamePlayManager : MonoBehaviour
             }
         }      
     }
-
-    //inArraysにですがあるかどうか
-    public bool IsDesth()
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                if (inArrays[x, y] == InArray.Death || inArrays[x,y] == InArray.Zero)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    //デスをすぺーすに一括返還
+    //DeathをSpaceに一括返還
     public void ZeroDesthChangeSpace()
     {
         for (int x = 0; x < width; ++x)
@@ -194,7 +162,7 @@ public class GamePlayManager : MonoBehaviour
             }
         }
     }
-
+    //inArraysにDeathがあるかどうか
     public bool IsDeath()
     {
         for (int x = 0; x < width; ++x)
@@ -227,13 +195,7 @@ public class GamePlayManager : MonoBehaviour
         }
         return i;
     }
-
-    //前の情報を入れる
-    public void PreviousArray()
-    {
-        previousArrays = inArrays;
-    }
-
+    //配列の指定場所をOutOfOilに設定する
     public void OutOfOil(int ax, int ay, int w, int h)
     {
         for (int x = ax; x < w; x++)
@@ -303,7 +265,7 @@ public class GamePlayManager : MonoBehaviour
             }
         }
     }
-
+    //次の移動地点がブロックかどうかを判断する
     public bool OnBlockCheck(Vector3 p, Vector3 next)
     {
         int nx = (int)next.x;
@@ -733,7 +695,7 @@ public class GamePlayManager : MonoBehaviour
             }
         }
     }
-
+    //inArraysをSpaceで初期化する
     public void inSpaceArray()//とりあえずすべてをspaceの情報にした。
     {
         for (int x = 0; x < width; ++x)
@@ -760,9 +722,9 @@ public class GamePlayManager : MonoBehaviour
 
         return inBlocks;
     }
-
+    //自分の位置が配列内かどうか
     public bool InInArray(Vector3 p)
-    {//配列内か
+    {
         for (int x = 0; x < width; ++x)
         {
             for (int y = 0; y < height; ++y)
@@ -776,7 +738,7 @@ public class GamePlayManager : MonoBehaviour
         return false;
     }
 
-    //下にcかpがあったら ture
+    //下にZeroかReadyがあったら ture
     public bool DownReadyOrZero(InArray[,] ins, List<Transform> t)
     {
 
@@ -790,10 +752,9 @@ public class GamePlayManager : MonoBehaviour
             {
                 int px = (int)t[c].position.x;
                 int py = (int)t[c].position.y;
-
-                if (inArrays[px, py - 1] == InArray.Ready ||
-                   inArrays[px, py - 1] == InArray.Zero &&
-                   ins[px, py - 1] == InArray.Space)
+                if (inArrays[px, py- 1] == InArray.Ready ||
+                   inArrays[px, py -1] == InArray.Zero &&
+                   ins[px, py -1] == InArray.Space)
                 {
                     return true;
                 }
@@ -801,16 +762,18 @@ public class GamePlayManager : MonoBehaviour
         }
         return false;
     }
-    //自分をcにする
+
+    //自分をReadyにする
     public void SelfReady(Vector3 p)
     {
         inArrays[(int)p.x, (int)p.y] = InArray.Ready;
     }
-
+    //自分の位置をDeathにする
     public void SelfDeath(Vector3 p)
     {
         inArrays[(int)p.x, (int)p.y] = InArray.Death;
     }
+    //自分の位置をSpaceにする
     public void SelfSpace(Vector3 p)
     {
         inArrays[(int)p.x, (int)p.y] = InArray.Space;
@@ -820,8 +783,8 @@ public class GamePlayManager : MonoBehaviour
     {
         useObjects.Remove(g);
     }
-
-    public void WallArray()//壁の情報を付ける
+    //壁の情報を付ける
+    public void WallArray()
     {
 
         for (int x = 0; x < width; ++x)
@@ -844,27 +807,7 @@ public class GamePlayManager : MonoBehaviour
     {
         return inArrays;
     }
-    //一番下の消えるブロックのy位置を取得
-    int Sort()
-    {
-        int a = 0;
-        for (int x = 0; x < width; ++x)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                if (inArrays[x, y] == InArray.Death ||
-                    inArrays[x, y] == InArray.Zero)
-                {
-                    if (a > y)
-                    {
-                        a = y;
-                    }
-                }
-            }
-        }
-        return a;
-    }
-
+    //デバッグ用テキストに描画する用
     public void arrayDebug()
     {
         //s = "\n";//最初改行
