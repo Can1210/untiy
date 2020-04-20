@@ -15,7 +15,7 @@ public class Conbo : MonoBehaviour
     const int width = 12;                      //配列のｘの数
     const int height = 22;                     //配列のｙの数
     private InArray[,] inArrays = new InArray[width, height];               //ゲームマネージャーの配列をコピー
-    private List<List<InArray>> removeList = new List<List<InArray>>();  //これでいいのかわからんけれど一応上のものの動的用
+    private List<List<InArray>> removeList = new List<List<InArray>>();     //これでいいのかわからんけれど一応上のものの動的用
 
     // Start is called before the first frame update
     void Start()
@@ -111,8 +111,6 @@ public class Conbo : MonoBehaviour
         Debug.Log("今のコンボ"+ count);
         nowScore += count*100;     //スコア加算
     }
-            
-
 
     //コンボをしているかどうか
     public bool GetIsConbo()

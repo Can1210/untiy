@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//ターン制の廃止のためのリアルタイムでやる  TurnChangeの代わりをここでやる
+//ターン制の廃止のためのリアルタイムでやる  TurnChangeの代わりをここでやる  ここでやるのはコンボしたかどうか　消すかどうか　カウントを下げるかどうか
 public class RealTimeManager : MonoBehaviour
 {
     [SerializeField]
@@ -35,17 +35,14 @@ public class RealTimeManager : MonoBehaviour
         DeleteBlocks();                  //常に呼ぶが外部で変更されない限りreturnされる
         CountDown();                     //常に呼ぶが外部で変更されない限りreturnされる
     }
-
-    //とりあえず殴り書きする・形になったら名前を変える
-    void Scribble()
-    {
-
-    }
+    
     //ブロックを消す
     void DeleteBlocks()
     {
+        ResultState();
         //falseなら早期リターン
         if (!isDeleteBlock) return;
+
         gameManager.ZeroOrCube();        //自分がゼロじゃなくてspaceでもwallでもない場合   ゼロ以外デスにする
         //消されたものがあるならスコア加算して
         if (gameManager.IsDeath())
@@ -57,8 +54,52 @@ public class RealTimeManager : MonoBehaviour
                 nowConbo = 0;
             conbo.SetFalseIsConbo();     //コンボを確認したらfalseにする
         }
-        isDeleteBlock = false;           //処理が終わったら元に戻す
+        if (!gameManager.IsDeath())
+        {
+
+            isDeleteBlock = false;           //場に0か死んでいるブロックがないならfalseに変更する
+            for (int i = 0; i < gameManager.useObjects.Count; i++)
+            {
+                gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState = CurrentState.Down;
+            }
+        }
+        if (gameManager.moveOk)
+        {
+            gameManager.ZeroDesthChangeSpace();
+        }
     }
+    //ターンチェンジのリザルトの役割だったもの
+    void ResultState()
+    {
+        int resCount = 0;
+
+        if (gameObjectsList.Count <= gameManager.useObjects.Count)
+        {
+            for (int c = 0; c < gameManager.useObjects.Count; c++)
+            {
+                if (gameManager.useObjects[c].GetComponent<RealTimeBlock>().currentState == CurrentState.SelfReady ||
+                    gameManager.useObjects[c].GetComponent<RealTimeBlock>().currentState == CurrentState.SelfZero)
+                {
+                    gameObjectsList.Add(gameManager.useObjects[c]);
+                }
+            }
+        }
+        for (int i = 0; i < gameObjectsList.Count; i++)
+        {
+            //止まっていたら
+            if (gameObjectsList[i].GetComponent<RealTimeBlock>().currentState == CurrentState.UpStop)
+            {
+                resCount++;
+
+                isDeleteBlock = true;
+            }
+        }
+        if (resCount == gameObjectsList.Count && resCount != 0)
+        {
+            gameObjectsList = new List<GameObject>();
+        }
+    }
+
     //揚げカウントを減らす
     void CountDown()
     {

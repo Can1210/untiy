@@ -18,16 +18,16 @@ public class ProOrder : MonoBehaviour
         for(int i = 0;i < gameManager.useObjects.Count; i++)
         {
 
-            if(gameManager.useObjects[i].GetComponent<Block>().currentState == CurrentState.DownReSpawn)
+            if(gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState == CurrentState.DownReSpawn)
             {
                 //オブジェクトを削除
                 Destroy(gameManager.useObjects[i]);
                 //生成
                 GameObject instance = Instantiate(gameManager.useObjects[i]);
 
-                instance.GetComponent<Block>().enabled = true;
-                instance.GetComponent<Block>().InsCube();
-                instance.GetComponent<Block>().isIns = true;
+                instance.GetComponent<RealTimeBlock>().enabled = true;
+                instance.GetComponent<RealTimeBlock>().InsCube();
+                instance.GetComponent<RealTimeBlock>().isIns = true;
 
                 //生成したオブジェクトをりすとに追加
                 gameManager.UseObj(instance);

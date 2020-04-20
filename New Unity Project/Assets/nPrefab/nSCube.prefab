@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1153920820640486553}
-  - component: {fileID: 6809042091117283797}
+  - component: {fileID: 4843541890182733688}
   m_Layer: 0
   m_Name: nSCube
   m_TagString: Untagged
@@ -35,7 +35,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6809042091117283797
+--- !u!114 &4843541890182733688
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1783605090618287269}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aec949a0ae8b9b4bb3d0a92358cc857, type: 3}
+  m_Script: {fileID: 11500000, guid: 07d9b28863d4d10418d5f24d49060d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   childen:
@@ -54,7 +54,7 @@ MonoBehaviour:
   - {fileID: 6434078110539622603}
   currentState: 0
   isIns: 0
---- !u!114 &7083633151548138110
+--- !u!114 &1799007884383533467
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,10 +63,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3358088447093187430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e519df23fedd2479405786d80aa2c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 06b63dd86e145cb4ba0b6316bff4206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4424602561911566056
+--- !u!114 &7758093557374450954
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,10 +75,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3987348608786106553}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e519df23fedd2479405786d80aa2c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 06b63dd86e145cb4ba0b6316bff4206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1337968926502024690
+--- !u!114 &1268583350589989442
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,10 +87,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6182585847925723185}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e519df23fedd2479405786d80aa2c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 06b63dd86e145cb4ba0b6316bff4206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5369355888221562183
+--- !u!114 &2977003982713456521
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8169462670980059496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e519df23fedd2479405786d80aa2c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 06b63dd86e145cb4ba0b6316bff4206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &606377315006835861
@@ -109,6 +109,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -164,11 +169,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: text
@@ -206,6 +206,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test (3)
+      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -261,11 +266,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test (3)
-      objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: text
@@ -303,6 +303,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test
+      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -357,11 +362,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test
       objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
@@ -400,6 +400,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1153920820640486553}
     m_Modifications:
+    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
+        type: 3}
+      propertyPath: m_Name
+      value: DefultCube_test (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 8481141312952599815, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -454,11 +459,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6748289891063184548, guid: afabb321b80c4634693b6ae96dd0c9dd,
-        type: 3}
-      propertyPath: m_Name
-      value: DefultCube_test (1)
       objectReference: {fileID: 0}
     - target: {fileID: 7203157614450840038, guid: afabb321b80c4634693b6ae96dd0c9dd,
         type: 3}
