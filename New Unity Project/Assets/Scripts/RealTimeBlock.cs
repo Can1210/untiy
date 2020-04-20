@@ -112,7 +112,7 @@ public class RealTimeBlock : MonoBehaviour
     void ReadyState()
     {
         //上にspaceがあったら
-        if (gameManager.NotOnSpace(inBlocks, childPos))
+        if (!gameManager.NotOnSpace(inBlocks, childPos))
         {
             if (!CheckFryCount())
                 currentState = CurrentState.SelfReady;
@@ -172,7 +172,6 @@ public class RealTimeBlock : MonoBehaviour
             //if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + velocity)) return;
 
             #endregion
-
         }
     }
 
@@ -270,7 +269,7 @@ public class RealTimeBlock : MonoBehaviour
         for (int i = 0; i < childPos.Count; i++)
         {
             //nullだったらリターン
-            //if (childPos[i] == null) return;
+            if (childPos[i] == null) return;
             int cx = (int)childPos[i].position.x;
             int cy = (int)childPos[i].position.y;
 

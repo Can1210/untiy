@@ -582,13 +582,17 @@ public class GamePlayManager : MonoBehaviour
     //上がspaceじゃなかったら
     public bool NotOnSpace(InArray[,] ina, List<Transform> t)
     {
-
         for (int i = 0; i < t.Count; i++)
         {
             Vector3 p = t[i].position;
             int px = (int)p.x;
             int py = (int)p.y;
 
+            if (InInArray(p))
+            {
+                return false;
+            }
+            
             if (inArrays[px, py + 1] != InArray.Space && ina[px, py + 1] == InArray.Space)
             {
                 //ブロックがあった場合他のやつのブロック

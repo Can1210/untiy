@@ -86,6 +86,11 @@ public class RealTimeManager : MonoBehaviour
         }
         for (int i = 0; i < gameObjectsList.Count; i++)
         {
+            if (gameObjectsList[i] == null)
+            {
+                return;
+            }
+           
             //止まっていたら
             if (gameObjectsList[i].GetComponent<RealTimeBlock>().currentState == CurrentState.UpStop)
             {
