@@ -31,6 +31,8 @@ public class TurnManager : MonoBehaviour
     {
         foreach(var l in list)
         {
+            if (!(l.GetComponent<RealTimeBlock>().GetNoFry())) continue;    //入ってきたばかりの物はカウントを進めない
+
             l.GetComponent<RealTimeBlock>().FryCountDown();
         }
     }

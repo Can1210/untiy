@@ -124,6 +124,7 @@ public class RealTimeBlock : MonoBehaviour
     //子供たちの場所から確認
     void ChildPosCheck()
     {
+        Debug.Log("判断" + noFry);
         for (int i = 0; i < childPos.Count; i++)
         {
             if (childPos[i] == null) break;
@@ -133,7 +134,6 @@ public class RealTimeBlock : MonoBehaviour
                 case CurrentState.Down:           //落ちてるとき
                     if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, -1, 0)))
                     {
-                        Debug.Log("止まる");
                         currentState = CurrentState.DownStop;
                         CheckNoFry();
                     }
@@ -142,9 +142,15 @@ public class RealTimeBlock : MonoBehaviour
                 case CurrentState.SelfZero:
                     if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, 1, 0)))
                     {
-                        currentState = CurrentState.UpStop;            //上に何かあったら止まるというものにしているがここで貫通が起きている
+                        currentState = CurrentState.UpStop;
+                        timeManager.SetIsDelete(true);
                     }
-                        
+                    break;
+                case CurrentState.UpStop:         //上昇が止まって上のがどこかいってスペースに変わったら上昇するよう切り替える
+                    if (!gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, 1, 0)))
+                    {
+                        currentState = CurrentState.SelfReady;
+                    }
                     break;
             }
             #region ifをswitchに変更
@@ -206,10 +212,12 @@ public class RealTimeBlock : MonoBehaviour
     //一度下についたかどうかを検査
     void CheckNoFry()
     {
+        
         //一度下についた物は揚げカウントを操作できない
         if (noFry) return;
+        noFry = true;
         timeManager.SetIsFryCountDown(true);       //下に止まった時変える
-        noFry = false;
+        
     }
 
 
@@ -256,7 +264,6 @@ public class RealTimeBlock : MonoBehaviour
     //自分の型を設計する
     private void MyBlockDesign(List<Transform> t)
     {
-        Debug.Log("子カウント"+childPos.Count);
         //いったん真っ白にしてから
         for (int x = 0; x < width; ++x)
         {

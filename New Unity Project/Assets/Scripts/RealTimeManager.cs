@@ -24,8 +24,8 @@ public class RealTimeManager : MonoBehaviour
         gameManager     = GetComponent<GamePlayManager>();
         fryCountManager = GetComponent<TurnManager>();
         conbo           = GetComponent<Conbo>();
-        isFryCount    = false;           //最初はfalseで初期化
-        isDeleteBlock = false;           //最初はfalseで初期化
+        isFryCount      = false;           //最初はfalseで初期化
+        isDeleteBlock   = false;           //最初はfalseで初期化
     }
 
     // Update is called once per frame
@@ -39,9 +39,11 @@ public class RealTimeManager : MonoBehaviour
     //ブロックを消す
     void DeleteBlocks()
     {
+        Debug.Log("ブロックを消してもいいか"+ isDeleteBlock);
         ResultState();
         //falseなら早期リターン
         if (!isDeleteBlock) return;
+        if (!WaitRemoveBlock()) return;   //上昇中のものがいたらreturn
 
         gameManager.ZeroOrCube();        //自分がゼロじゃなくてspaceでもwallでもない場合   ゼロ以外デスにする
         //消されたものがあるならスコア加算して
@@ -54,10 +56,9 @@ public class RealTimeManager : MonoBehaviour
                 nowConbo = 0;
             conbo.SetFalseIsConbo();     //コンボを確認したらfalseにする
         }
-        if (!gameManager.IsDeath())
+        else
         {
-
-            isDeleteBlock = false;           //場に0か死んでいるブロックがないならfalseに変更する
+            isDeleteBlock = false;       //場に0か死んでいるブロックがないならfalseに変更する
             for (int i = 0; i < gameManager.useObjects.Count; i++)
             {
                 gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState = CurrentState.Down;
@@ -72,7 +73,7 @@ public class RealTimeManager : MonoBehaviour
     void ResultState()
     {
         int resCount = 0;
-
+        Debug.Log("gameObjectsListの数" + gameObjectsList.Count);
         if (gameObjectsList.Count <= gameManager.useObjects.Count)
         {
             for (int c = 0; c < gameManager.useObjects.Count; c++)
@@ -86,16 +87,12 @@ public class RealTimeManager : MonoBehaviour
         }
         for (int i = 0; i < gameObjectsList.Count; i++)
         {
-            if (gameObjectsList[i] == null)
-            {
-                return;
-            }
+            if (gameObjectsList[i] == null) return;
            
             //止まっていたら
             if (gameObjectsList[i].GetComponent<RealTimeBlock>().currentState == CurrentState.UpStop)
             {
                 resCount++;
-
                 isDeleteBlock = true;
             }
         }
@@ -104,6 +101,20 @@ public class RealTimeManager : MonoBehaviour
             gameObjectsList = new List<GameObject>();
         }
     }
+    //消すのを上昇中(Up)のものがいたら消すのを待つ
+    bool WaitRemoveBlock()
+    {
+        for (int i = 0; i < gameManager.useObjects.Count; i++)
+        {
+            //上昇中のものがいたらfalse
+            if(gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState == CurrentState.Up)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     //揚げカウントを減らす
     void CountDown()
