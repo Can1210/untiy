@@ -32,7 +32,7 @@ public class GamePlayManager : MonoBehaviour
 
     public Vector3[,] worldPos = new Vector3[width, height];        //3D空間を配列計算するための物
 
-    public float speed = 2.0f;                                      
+    public float speed = 2.0f;
     private float time;
     private int currenTime;//時間
     [SerializeField]
@@ -62,7 +62,7 @@ public class GamePlayManager : MonoBehaviour
         //world[x = 1,y = 18] widht - 1壁から一個前 height - 1 壁から一個前
         OutOfOil(1, 18, width - 1, height - 1);     //油の外の情報をつける
 
-        
+
         //初期化
         time = 0;
         currenTime = 0;
@@ -70,7 +70,7 @@ public class GamePlayManager : MonoBehaviour
 
         useObjects = new List<GameObject>();
     }
-    
+
     void Update()
     {
         NowTime();
@@ -104,7 +104,7 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                if (inArrays[x, py] == InArray.Zero || inArrays[x,py] == InArray.Death)
+                if (inArrays[x, py] == InArray.Zero || inArrays[x, py] == InArray.Death)
                 {
                     return true;
                 }
@@ -112,7 +112,7 @@ public class GamePlayManager : MonoBehaviour
         }
         return false;
     }
-    
+
     public bool NotZeroAreaArray(Vector3 p)
     {
         int px = (int)p.x;
@@ -137,16 +137,16 @@ public class GamePlayManager : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 //自分がゼロじゃなくてspaceでもwallでもない場合
-                if (inArrays[x, y] != InArray.Zero && inArrays[x,y] != InArray.Space && inArrays[x,y] != InArray.Wall)
+                if (inArrays[x, y] != InArray.Zero && inArrays[x, y] != InArray.Space && inArrays[x, y] != InArray.Wall)
                 {
-                    if(ZeroDeathArea(worldPos[x, y]))
+                    if (ZeroDeathArea(worldPos[x, y]))
                     {
                         //デスを入れる
                         inArrays[x, y] = InArray.Death;
                     }
                 }
             }
-        }      
+        }
     }
     //DeathをSpaceに一括返還
     public void ZeroDesthChangeSpace()
@@ -155,7 +155,7 @@ public class GamePlayManager : MonoBehaviour
         {
             for (int y = 0; y < height; ++y)
             {
-                if (inArrays[x, y] == InArray.Death || inArrays[x,y] == InArray.Zero)
+                if (inArrays[x, y] == InArray.Death || inArrays[x, y] == InArray.Zero)
                 {
                     inArrays[x, y] = InArray.Space;
                 }
@@ -297,10 +297,14 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return true;
                             }
-                            else if (inArrays[nx, y] == InArray.Zero)
-                            {
-                                return true;
-                            }
+                            //else if (inArrays[nx, y] == InArray.Zero)
+                            //{
+                            //    return true;
+                            //}
+                            //else if (inArrays[nx, y] == InArray.Ready)
+                            //{
+                            //    return true;
+                            //}
                         }
                     }
                 }
@@ -327,24 +331,39 @@ public class GamePlayManager : MonoBehaviour
                             {
                                 return true;
                             }
-                            else if (inArrays[nx, y] == InArray.DownFixedBlock)//すでに固定された
-                            {
-                                return true;
-                            }
+                            //else if (inArrays[nx, y] == InArray.DownFixedBlock)//すでに固定された
+                            //{
+                            //    return true;
+                            //}
                             else if (inArrays[nx, y] == InArray.OutOfOil)
                             {
                                 return true;
                             }
-                            else if (inArrays[nx, y] == InArray.UpWall)
-                            {
-                                return true;
-                            }
+                            //else if (inArrays[nx, y] == InArray.UpWall)
+                            //{
+                            //    return true;
+                            //}
                         }
                     }
                 }
             }
         }
 
+        return false;
+    }
+
+    //空中
+    public bool OnCheckCollision(Vector3 p, Vector3 next)
+    {
+        int ny = (int)next.y;
+        int nx = (int)next.x;
+        if (InInArray(new Vector3(nx,ny - 1,0)))
+        {
+            if (inArrays[nx, ny - 1] == InArray.Zero || inArrays[nx,ny - 1] == InArray.Ready)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -593,7 +612,7 @@ public class GamePlayManager : MonoBehaviour
             {
                 return false;
             }
-            
+
             if (inArrays[px, py + 1] != InArray.Space && ina[px, py + 1] == InArray.Space)
             {
                 //ブロックがあった場合他のやつのブロック
@@ -757,9 +776,9 @@ public class GamePlayManager : MonoBehaviour
             {
                 int px = (int)t[c].position.x;
                 int py = (int)t[c].position.y;
-                if (inArrays[px, py- 1] == InArray.Ready ||
-                   inArrays[px, py -1] == InArray.Zero &&
-                   ins[px, py -1] == InArray.Space)
+                if (inArrays[px, py - 1] == InArray.Ready ||
+                   inArrays[px, py - 1] == InArray.Zero &&
+                   ins[px, py - 1] == InArray.Space)
                 {
                     return true;
                 }
