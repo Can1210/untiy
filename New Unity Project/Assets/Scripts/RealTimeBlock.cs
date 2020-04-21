@@ -132,6 +132,12 @@ public class RealTimeBlock : MonoBehaviour
             switch (currentState)
             {
                 case CurrentState.Down:           //落ちてるとき
+                    if(gameManager.OnCheckCollision(childPos[i].position, childPos[i].position + new Vector3(0, -1, 0)))
+                    {
+                        currentState = CurrentState.DownStop;
+                        CheckNoFry();
+                        return;
+                    }
                     if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, -1, 0)))  //一マス先に何かのブロックがあるかどうか　か　2マス先に死んでいるブロックがあるかどうか
                     {
                         currentState = CurrentState.DownStop;
@@ -143,7 +149,10 @@ public class RealTimeBlock : MonoBehaviour
                     if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, 1, 0)))
                     {
                         currentState = CurrentState.UpStop;
-                        //timeManager.SetIsDelete(true);
+                        if (CheckUpSpaceArray(i))
+                        {
+                            timeManager.SetIsDelete(true);
+                        }
                     }
                     break;
                 case CurrentState.UpStop:         //上昇が止まって上のがどこかいってスペースに変わったら上昇するよう切り替える
