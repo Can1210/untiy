@@ -108,7 +108,6 @@ public class Conbo : MonoBehaviour
                 count++;   //ブロックなら加算
             }
         }
-        Debug.Log("今のコンボ"+ count);
         nowScore += count*100;     //スコア加算
     }
 

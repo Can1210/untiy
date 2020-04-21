@@ -32,8 +32,8 @@ public class RealTimeBlock : MonoBehaviour
     Vector3 velocity;
 
     private bool noFry;                     //落ちてきた直後かどうか
+    private bool isDelete;                  //消すかどうか
 
-    // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GamePlayManager").GetComponent<GamePlayManager>();
@@ -56,6 +56,7 @@ public class RealTimeBlock : MonoBehaviour
         previos = new Vector3[childPos.Count];
         velocity = Vector3.zero;                       //0で初期化
         noFry = false;
+        isDelete = false;                              //最初は消せないようにする
     }
 
     // Update is called once per frame
@@ -124,7 +125,6 @@ public class RealTimeBlock : MonoBehaviour
     //子供たちの場所から確認
     void ChildPosCheck()
     {
-        Debug.Log("判断" + noFry);
         for (int i = 0; i < childPos.Count; i++)
         {
             if (childPos[i] == null) break;
@@ -132,7 +132,7 @@ public class RealTimeBlock : MonoBehaviour
             switch (currentState)
             {
                 case CurrentState.Down:           //落ちてるとき
-                    if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, -1, 0)))
+                    if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, -1, 0)))  //一マス先に何かのブロックがあるかどうか　か　2マス先に死んでいるブロックがあるかどうか
                     {
                         currentState = CurrentState.DownStop;
                         CheckNoFry();
@@ -143,7 +143,7 @@ public class RealTimeBlock : MonoBehaviour
                     if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + new Vector3(0, 1, 0)))
                     {
                         currentState = CurrentState.UpStop;
-                        timeManager.SetIsDelete(true);
+                        //timeManager.SetIsDelete(true);
                     }
                     break;
                 case CurrentState.UpStop:         //上昇が止まって上のがどこかいってスペースに変わったら上昇するよう切り替える
@@ -153,56 +153,44 @@ public class RealTimeBlock : MonoBehaviour
                     }
                     break;
             }
-            #region ifをswitchに変更
-            ////落ちているとき
-            //if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + velocity) &&
-            //    currentState == CurrentState.Down)
-            //{
-            //    currentState = CurrentState.DownStop;
-            //    CheckNoFry();
-            //}
-            ////上がっているとき  数字１以上ブロック 　上に来たら止める
-            //else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + velocity) &&
-            //    currentState == CurrentState.SelfReady)
-            //{
-            //    currentState = CurrentState.UpStop;
-
-            //}
-            ////上がっているとき  数字0ブロック 　上に来たら止める
-            //else if (gameManager.OnBlockCheck(childPos[i].position, childPos[i].position + velocity) &&
-            //    currentState == CurrentState.SelfZero)
-            //{
-            //    currentState = CurrentState.UpStop;
-            //}
-            //これ意味ないと思う
-            //if (!gameManager.OnCubeOfWallCheck(childPos[i].position, childPos[i].position + velocity)) return;
-
-            #endregion
         }
     }
-
+    //自分の上にスペースがあるか調べる　あったらfalse　なかったらtrue
+    bool CheckUpSpaceArray(int childNum)
+    {
+        Vector3 pos = childPos[childNum].position;
+       
+        int Y = (int)pos.y;
+        //自分の位置から上を調べる
+        for (int y = Y; y < 17; y++)
+        {
+            //自分の上がSpaceならfalse
+            if (gameManager.SelfState(new Vector3(pos.x,y,pos.z)) == InArray.Space)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     //移動許可
     void MoveOk()
     {
         //移動許可が出ていなかったら早期リターン
         if (!gameManager.moveOk) return;
 
-        //下に行くなら移動量を下に
-        if (currentState == CurrentState.Down)
+        switch (currentState)
         {
-            //下に移動し続ける
-            velocity = new Vector3(0, downSpeed, 0);
-        }
-        //
-        else if (currentState == CurrentState.SelfZero || currentState == CurrentState.SelfReady)
-        {
-            //上に移動し続ける
-            velocity = new Vector3(0, upSpeed, 0);
-        }
-        else if (currentState == CurrentState.DownStop && currentState == CurrentState.UpStop)
-        {
-            //とまる
-            velocity = new Vector3(0, 0, 0);
+            case CurrentState.Down:
+                velocity = new Vector3(0, downSpeed, 0);    //下に移動し続ける
+                break;
+            case CurrentState.SelfZero:
+            case CurrentState.SelfReady:
+                velocity = new Vector3(0, upSpeed, 0);      //上に移動し続ける
+                break;
+            case CurrentState.DownStop:
+            case CurrentState.UpStop:
+                velocity = new Vector3(0, 0, 0);            //とまる
+                break;
         }
     }
 
@@ -212,7 +200,6 @@ public class RealTimeBlock : MonoBehaviour
     //一度下についたかどうかを検査
     void CheckNoFry()
     {
-        
         //一度下についた物は揚げカウントを操作できない
         if (noFry) return;
         noFry = true;
@@ -296,5 +283,9 @@ public class RealTimeBlock : MonoBehaviour
     {
         return noFry;
     }
-
+    //死亡状態を確認する
+    public bool GetisDelete()
+    {
+        return isDelete;
+    }
 }
