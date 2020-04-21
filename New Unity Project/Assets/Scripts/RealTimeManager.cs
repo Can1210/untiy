@@ -55,25 +55,32 @@ public class RealTimeManager : MonoBehaviour
             else
                 nowConbo = 0;
             conbo.SetFalseIsConbo();     //コンボを確認したらfalseにする
+
+            if (gameManager.moveOk)
+            {
+                gameManager.ZeroDesthChangeSpace();
+            }
+
         }
         else
         {
             isDeleteBlock = false;       //場に0か死んでいるブロックがないならfalseに変更する
             for (int i = 0; i < gameManager.useObjects.Count; i++)
             {
+                if(gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState == CurrentState.SelfReady || 
+                   gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState == CurrentState.SelfZero )
+                {
+                    return;
+                }
                 gameManager.useObjects[i].GetComponent<RealTimeBlock>().currentState = CurrentState.Down;
             }
         }
-        if (gameManager.moveOk)
-        {
-            gameManager.ZeroDesthChangeSpace();
-        }
+        
     }
     //ターンチェンジのリザルトの役割だったもの
     void ResultState()
     {
         int resCount = 0;
-        Debug.Log("gameObjectsListの数" + gameObjectsList.Count);
         if (gameObjectsList.Count <= gameManager.useObjects.Count)
         {
             for (int c = 0; c < gameManager.useObjects.Count; c++)
@@ -93,7 +100,7 @@ public class RealTimeManager : MonoBehaviour
             if (gameObjectsList[i].GetComponent<RealTimeBlock>().currentState == CurrentState.UpStop)
             {
                 resCount++;
-                isDeleteBlock = true;
+                //isDeleteBlock = true;
             }
         }
         if (resCount == gameObjectsList.Count && resCount != 0)
